@@ -50,6 +50,7 @@ namespace Source
 	  int clantag_step = 0;
 
 	  virtual void ModulateWorld( );
+	  virtual void ChatSpam( );
 	  virtual void ClantagChanger( );
 	  virtual void ViewModelChanger( );
 	  virtual void SkyboxCahanger( );
@@ -68,6 +69,7 @@ namespace Source
 	  if ( !g_Vars.globals.HackIsReady )
 		 return;
 
+	  ChatSpam( );
 	  ClantagChanger( );
 	  ViewModelChanger( );
 	  SkyboxCahanger( );
@@ -144,6 +146,13 @@ namespace Source
 			material->AlphaModulate( color.a );
 		 }
 	  }
+   }
+
+   void C_Miscellaneous::ChatSpam( ) {
+	  if ( !g_Vars.misc.chat_spammer )
+		 return;
+
+	  Source::m_pEngine->ClientCmd( XorStr( "say 1 tap" ) );
    }
 
    void C_Miscellaneous::ClantagChanger( ) {

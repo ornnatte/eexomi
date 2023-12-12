@@ -2,13 +2,13 @@
 #include "sdk.hpp"
 
 struct C_TickbaseShift {
-   int max_choke = 0x10;
+   int max_choke = 16;
    int future_ticks = 8;
-   int max_tickbase_shift = 0xC;
+   int max_tickbase_shift = 14;
    int ticks_allowed = 0;
-   int min_tickbase_shift = 5;
+   int min_tickbase_shift = 7;
    bool exploits_enabled = false;
-   int lag_limit = 0xE;
+   int lag_limit = 14;
    bool in_rapid = false;
    bool was_in_rapid = false;
    int over_choke_nr = 0;

@@ -897,7 +897,7 @@ namespace Engine
 		 if ( speed <= 0.1f ) {
 			if ( current->m_serverAnimOverlays[ 3 ].m_flWeight == 0.0f && current->m_serverAnimOverlays[ 3 ].m_flCycle == 0.0f &&
 				 current->m_serverAnimOverlays[ 6 ].m_flWeight == 0.0f ) {
-			   float delta = std::remainderf( this->m_Animations[ 1 ].m_flAbsRotation - player->m_angEyeAngles( ).yaw, 360.f );
+			   float delta = Math::AngleNormalize( player->m_angEyeAngles( ).yaw - this->m_Animations[1].m_flAbsRotation );
 			   current->m_iResolverSide = 2 * ( delta <= 0.0 ) - 1;
 			   current->m_bAnimationResolverUsed = true;
 			}
@@ -925,8 +925,8 @@ namespace Engine
 			   auto delta_right = int( current->m_serverAnimOverlays[ 6 ].m_flPlaybackRate - current->fakeLayersRight[ 6 ].m_flPlaybackRate );
 			   auto delta_left = int( current->m_serverAnimOverlays[ 6 ].m_flPlaybackRate - current->fakeLayersLeft[ 6 ].m_flPlaybackRate );
 
-			   if ( delta_fake < delta_right || delta_left <= delta_right || int( delta_right * 1000.0f ) ) {
-				  if ( delta_fake >= delta_left && delta_right > delta_left && !( int( delta_left * 1000.0f ) ) ) {
+			   if ( delta_fake < delta_right || delta_left <= delta_right || ( delta_right * 1000.0f ) ) {
+				  if ( delta_fake >= delta_left && delta_right > delta_left && !( delta_left * 1000.0f ) ) {
 					 current->m_iResolverSide = 1;
 					 current->m_bAnimationResolverUsed = true;
 				  }

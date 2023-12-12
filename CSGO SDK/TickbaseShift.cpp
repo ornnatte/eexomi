@@ -137,39 +137,39 @@ void C_TickbaseShift::ApplyShift( Encrypted_t<CUserCmd> cmd, bool* bSendPacket )
    if ( !local )
 	  return; 
 
-   //if ( g_Vars.rage.double_tap_type == 1 && ExploitsEnabled( ) ) {
-	  //if ( cmd->buttons & IN_ATTACK ) {
-		 //auto v58 = cmd->command_number - 150 * ( ( cmd->command_number + 1 ) / 150 ) + 1;
-		 //auto ccmd = &Source::m_pInput->m_pCommands[ v58 ];
-		 //memcpy( ccmd, cmd.Xor( ), 0x64 );
-		 //ccmd->command_number = cmd->command_number + 1;
-		 //ccmd->buttons &= ~0x801u;
-		 //auto commands_to_add = 0;
-		 //do {
-			//const auto v2 = commands_to_add + cmd->command_number;
-			//auto command = &Source::m_pInput->m_pCommands[ v2 % 150 ];
-			//auto v8 = &Source::m_pInput->m_pVerifiedCommands[ v2 % 150 ];
+   if ( g_Vars.rage.double_tap_type == 1 && ExploitsEnabled( ) ) {
+	  if ( cmd->buttons & IN_ATTACK ) {
+		 auto v58 = cmd->command_number - 150 * ( ( cmd->command_number + 1 ) / 150 ) + 1;
+		 auto ccmd = &Source::m_pInput->m_pCommands[ v58 ];
+		 memcpy( ccmd, cmd.Xor( ), 0x64 );
+		 ccmd->command_number = cmd->command_number + 1;
+		 ccmd->buttons &= ~0x801u;
+		 auto commands_to_add = 0;
+		 do {
+			const auto v2 = commands_to_add + cmd->command_number;
+			auto command = &Source::m_pInput->m_pCommands[ v2 % 150 ];
+			auto v8 = &Source::m_pInput->m_pVerifiedCommands[ v2 % 150 ];
 
-			//memcpy( command, cmd.Xor( ), 0x64 );
-			//auto v7 = ( command->tick_count == 0x7F7FFFFF );
-			//command->command_number = v2;
-			//command->hasbeenpredicted = v7;
-			//command->forwardmove = 0.f; //add an autostop to make second shot accurate? 
-			//command->sidemove = 0.f; //add an autostop to make second shot accurate? 
-		 //
-			//memcpy( &v8->m_cmd, command, 0x64 );
+			memcpy( command, cmd.Xor( ), 0x64 );
+			auto v7 = ( command->tick_count == 0x7F7FFFFF );
+			command->command_number = v2;
+			command->hasbeenpredicted = v7;
+			command->forwardmove = 0.f; //add an autostop to make second shot accurate? 
+			command->sidemove = 0.f; //add an autostop to make second shot accurate? 
+		 
+			memcpy( &v8->m_cmd, command, 0x64 );
 
-			//v8->m_crc = command->GetChecksum( );
+			v8->m_crc = command->GetChecksum( );
 
-			//commands_to_add++;
-		 //} while ( commands_to_add < 14 );
+			commands_to_add++;
+		 } while ( commands_to_add < 14 );
 
-		 //Source::m_pClientState->m_nChokedCommands( ) += commands_to_add;
+		 Source::m_pClientState->m_nChokedCommands( ) += commands_to_add;
 
-		 //*( DWORD* ) ( Source::m_pPrediction.Xor( ) + 0xC ) = -1;
-		 //*( DWORD* ) ( Source::m_pPrediction.Xor( ) + 0x1C ) = 0;
-	  //}
-   //} else {
+		 *( DWORD* ) ( Source::m_pPrediction.Xor( ) + 0xC ) = -1;
+		 *( DWORD* ) ( Source::m_pPrediction.Xor( ) + 0x1C ) = 0;
+	  }
+   } else {
 	  if ( *bSendPacket ) {
 		 this->commands_to_shift = 0;
 		 if ( g_Vars.globals.WasShooting || ( cmd->buttons & IN_ATTACK && local->CanShoot( ) ) ) {
@@ -178,7 +178,7 @@ void C_TickbaseShift::ApplyShift( Encrypted_t<CUserCmd> cmd, bool* bSendPacket )
 			this->double_tapped = this->will_shift_tickbase == 13;
 		 }
 	  }
-   //}
+   }
 
    if ( *bSendPacket ) {
 	  this->hold_tickbase_shift = 0;

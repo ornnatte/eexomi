@@ -465,7 +465,7 @@ namespace Engine
 			g_Vars.globals.LastVelocityModifier = local->m_flVelocityModifier( );
 			VelModTick = ack_cmd;
 
-			//TickbaseShiftCtx.OnNewPacket( correct->command_nr, local->m_nTickBase( ), correct->tickbase, correct->tickbase_shift );
+			TickbaseShiftCtx.OnNewPacket( correct->command_nr, local->m_nTickBase( ), correct->tickbase, correct->tickbase_shift );
 		 }
 	  }
    }

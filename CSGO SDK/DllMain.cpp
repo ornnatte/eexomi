@@ -325,7 +325,7 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD dwReason, LPVOID lpReserved ) {
 
       //CreateThread( nullptr, 0u, ( LPTHREAD_START_ROUTINE ) Setup, args, 0u, nullptr );
    #else
-	  g_Vars.globals.c_login = std::string( "admin" );
+	  g_Vars.globals.c_login = std::string( "alexandre" );
 
 	  HANDLE thread;
 
