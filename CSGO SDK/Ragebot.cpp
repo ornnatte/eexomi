@@ -1989,8 +1989,8 @@ namespace Source
 		 if ( IsPointAccurate( best_point, rageData->m_vecEyePos ) ) {
 			if ( AimAtPoint( best_point ) && rageData->m_pCmd->buttons & IN_ATTACK ) {
 			   Encrypted_t<Engine::C_EntityLagData> lagData = Engine::LagCompensation::Get( )->GetLagData( best_point->target->player->m_entIndex );
-			   /* if ( TIME_TO_TICKS( lagData->m_History.front( ).m_flSimulationTime - best_point->target->record->m_flSimulationTime ) > 0 )
-				   TickbaseShiftCtx.AdjustPlayerTimeBaseFix( Source::m_pClientState->m_nChokedCommands( ) + TickbaseShiftCtx.will_shift_tickbase + 1 );*/
+			   //if ( TIME_TO_TICKS( lagData->m_History.front( ).m_flSimulationTime - best_point->target->record->m_flSimulationTime ) > 0 )
+				   //TickbaseShiftCtx.AdjustPlayerTimeBaseFix( Source::m_pClientState->m_nChokedCommands( ) + TickbaseShiftCtx.will_shift_tickbase + 1 );
 
 			   rageData->m_pCmd->tick_count = TIME_TO_TICKS( best_point->target->record->m_flSimulationTime + Engine::LagCompensation::Get( )->GetLerp( ) );
 

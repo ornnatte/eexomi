@@ -6,6 +6,7 @@ struct C_TickbaseShift {
    int future_ticks = 8;
    int max_tickbase_shift = 14;
    int ticks_allowed = 0;
+   bool disable_interp = false;
    int min_tickbase_shift = 7;
    bool exploits_enabled = false;
    int lag_limit = 14;

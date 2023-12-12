@@ -47,6 +47,10 @@ int& C_BasePlayer::m_nTickBase( ) {
    return *( int* ) ( ( uintptr_t ) this + Engine::Displacement.DT_BasePlayer.m_nTickBase );
 }
 
+int& C_BasePlayer::m_nFinalPredictedTick( ) {
+	return *( int* ) ( ( uintptr_t ) this + Engine::Displacement.DT_BasePlayer.m_nTickBase );
+}
+
 int& C_BasePlayer::m_iHealth( ) {
    return *( int* ) ( ( uintptr_t ) this + Engine::Displacement.DT_BasePlayer.m_iHealth );
 }

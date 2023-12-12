@@ -86,6 +86,8 @@ namespace Engine
 	  Displacement.DT_BasePlayer.m_flDuckSpeed = pPropManager->GetOffset( "DT_BasePlayer", "m_flDuckSpeed" );
 	  Displacement.DT_BasePlayer.m_lifeState = pPropManager->GetOffset( "DT_BasePlayer", "m_lifeState" );
 	  Displacement.DT_BasePlayer.m_nTickBase = pPropManager->GetOffset( "DT_BasePlayer", "m_nTickBase" );
+	  Displacement.DT_BasePlayer.m_nFinalPredictedTick = Displacement.DT_BasePlayer.m_nTickBase + 0x4;
+	  
 	  Displacement.DT_BasePlayer.m_iHealth = pPropManager->GetOffset( "DT_BasePlayer", "m_iHealth" );
 	  Displacement.DT_BasePlayer.m_iDefaultFOV = pPropManager->GetOffset( "DT_BasePlayer", "m_iDefaultFOV" );
 	  Displacement.DT_BasePlayer.m_fFlags = pPropManager->GetOffset( "DT_BasePlayer", "m_fFlags" );

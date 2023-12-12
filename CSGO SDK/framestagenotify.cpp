@@ -190,11 +190,28 @@ namespace Hooked
 		 }
 	  #endif
 
-		 if ( stage == FRAME_START && Source::m_pEngine->IsConnected( ) ) {
+		 if ( stage == FRAME_START && Source::m_pEngine->IsConnected( ) )
 			IPreserveKillfeed::Get( )->OnFrameStart( );
-		 }
 
 		 if ( stage == FRAME_RENDER_START && Source::m_pEngine->IsConnected( ) ) {
+			static bool has_reset_interp = false;
+			auto pLocal = C_CSPlayer::GetLocalPlayer( );
+			auto old_pred_tick = pLocal->m_nFinalPredictedTick( );
+
+			auto backup_interp = Source::m_pGlobalVars->interpolation_amount;
+			if( TickbaseShiftCtx.disable_interp ) {
+				pLocal->m_nFinalPredictedTick( ) = pLocal->m_nTickBase( );
+				Source::m_pGlobalVars->interpolation_amount = 0.f;
+				has_reset_interp = false;
+			}
+			else { 
+				if( !has_reset_interp ) {
+					pLocal->m_nFinalPredictedTick( ) = old_pred_tick;
+					Source::m_pGlobalVars->interpolation_amount = backup_interp;
+					has_reset_interp = true;
+				}
+			}
+
 			// disable animation interpolation 
 			if ( Engine::Displacement.Data.m_uClientSideAnimationList ) {
 			   auto clientAnimations = ( CUtlVector<clientanimating_t>* )Engine::Displacement.Data.m_uClientSideAnimationList;

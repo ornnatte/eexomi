@@ -49,6 +49,8 @@ void BypassChokeLimit( CCLCMsg_Move_t* CL_Move, INetChannel* pNetChan ) {
 
    bool bOk = true;
 
+   int tickrate = int(1.0f / Source::m_pGlobalVars->interval_per_tick);
+
    auto to = nextCmdNr - numCmd + 1;
    auto from = -1;
    if ( to <= nextCmdNr ) {
@@ -64,7 +66,7 @@ void BypassChokeLimit( CCLCMsg_Move_t* CL_Move, INetChannel* pNetChan ) {
 		 CUserCmd from_cmd, to_cmd;
 		 from_cmd = Source::m_pInput->m_pCommands[ nextCmdNr % MULTIPLAYER_BACKUP ];
 		 to_cmd = from_cmd;
-		 to_cmd.tick_count = INT_MAX;
+		 to_cmd.tick_count += tickrate * 3;
 
 		 do {
 			if ( numCmd >= 62 ) {
@@ -73,6 +75,7 @@ void BypassChokeLimit( CCLCMsg_Move_t* CL_Move, INetChannel* pNetChan ) {
 			}
 
 			to_cmd.command_number++;
+			to_cmd.tick_count++;
 			WriteUsercmd( &buf, &to_cmd, &from_cmd );
 
 			TickbaseShiftCtx.commands_to_shift--;

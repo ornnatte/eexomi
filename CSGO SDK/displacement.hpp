@@ -89,6 +89,7 @@ struct DllInitializeData {
 	  DWORD32 m_flDuckSpeed;
 	  DWORD32 m_lifeState;
 	  DWORD32 m_nTickBase;
+	  DWORD32 m_nFinalPredictedTick;
 	  DWORD32 m_iHealth;
 	  DWORD32 m_iDefaultFOV;
 	  DWORD32 m_fFlags;

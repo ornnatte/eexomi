@@ -438,6 +438,7 @@ public:
 
       float m_flLastShotTime = 0.f;
 
+	  CUserCmd* m_CMD = nullptr;
       bool m_bInCreateMove = false;
 
    } GLOBAL, * PGLOBAL;

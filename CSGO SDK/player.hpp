@@ -44,6 +44,7 @@ public:
    float& m_flDuckSpeed( );
    char& m_lifeState( );
    int& m_nTickBase( );
+   int& m_nFinalPredictedTick( );
    int& m_iHealth( );
    int& m_fFlags( );
    int& m_iDefaultFOV( );

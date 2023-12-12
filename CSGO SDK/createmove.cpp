@@ -72,6 +72,7 @@ namespace Hooked
 	  auto bRet = oCreateMove( ft, _cmd );
 
 	  g_Vars.globals.m_bInCreateMove = true;
+	  g_Vars.globals.m_CMD = _cmd;
 
 	  auto pLocal = C_CSPlayer::GetLocalPlayer( );
 	  if ( pLocal->IsDead( ) ) {
@@ -357,8 +358,25 @@ namespace Hooked
 		 return;
 	  }
 
+	  // don't disable interp when we are not required to.
+	  TickbaseShiftCtx.disable_interp = false;
+
 	  if ( !TickbaseShiftCtx.CanShiftTickbase( ) ) {
+		 TickbaseShiftCtx.disable_interp = true; // disable interpolation
+
 		 TickbaseShiftCtx.over_choke_nr = Source::m_pClientState->m_nLastOutgoingCommand( ) + Source::m_pClientState->m_nChokedCommands( ) + 1;
+		 auto cmd = g_Vars.globals.m_CMD;
+		 if( cmd ) {
+			 if( cmd->forwardmove != 0.f
+				 && cmd->sidemove != 0.f ) // reset move, invalidate packet
+			 {
+				 // do this on recharge, no creating new cmd
+				 cmd->tick_count = INT_MAX;
+				 cmd->forwardmove = 0.f;
+				 cmd->sidemove = 0.f;
+			 }
+		 }
+
 		 return;
 	  }
 

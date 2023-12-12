@@ -18,8 +18,8 @@ bool C_TickbaseShift::CanShiftTickbase( void ) {
    if ( !local )
 	  return true;
 
-  /* if ( Source::m_pGlobalVars->realtime - g_Vars.globals.m_flLastShotTime < 0.5f && ExploitsEnabled( ) && g_Vars.rage.double_tap_type == 1 )
-	  return true;*/
+   if ( Source::m_pGlobalVars->realtime - g_Vars.globals.m_flLastShotTime < 0.5f && ExploitsEnabled( ) ) // recharge time
+	   return true;
 
    this->ticks_allowed++;
 
@@ -137,83 +137,47 @@ void C_TickbaseShift::ApplyShift( Encrypted_t<CUserCmd> cmd, bool* bSendPacket )
    if ( !local )
 	  return; 
 
-   if ( g_Vars.rage.double_tap_type == 1 && ExploitsEnabled( ) ) {
-	  if ( cmd->buttons & IN_ATTACK ) {
-		 auto v58 = cmd->command_number - 150 * ( ( cmd->command_number + 1 ) / 150 ) + 1;
-		 auto ccmd = &Source::m_pInput->m_pCommands[ v58 ];
-		 memcpy( ccmd, cmd.Xor( ), 0x64 );
-		 ccmd->command_number = cmd->command_number + 1;
-		 ccmd->buttons &= ~0x801u;
-		 auto commands_to_add = 0;
-		 do {
-			const auto v2 = commands_to_add + cmd->command_number;
-			auto command = &Source::m_pInput->m_pCommands[ v2 % 150 ];
-			auto v8 = &Source::m_pInput->m_pVerifiedCommands[ v2 % 150 ];
-
-			memcpy( command, cmd.Xor( ), 0x64 );
-			auto v7 = ( command->tick_count == 0x7F7FFFFF );
-			command->command_number = v2;
-			command->hasbeenpredicted = v7;
-			command->forwardmove = 0.f; //add an autostop to make second shot accurate? 
-			command->sidemove = 0.f; //add an autostop to make second shot accurate? 
-		 
-			memcpy( &v8->m_cmd, command, 0x64 );
-
-			v8->m_crc = command->GetChecksum( );
-
-			commands_to_add++;
-		 } while ( commands_to_add < 14 );
-
-		 Source::m_pClientState->m_nChokedCommands( ) += commands_to_add;
-
-		 *( DWORD* ) ( Source::m_pPrediction.Xor( ) + 0xC ) = -1;
-		 *( DWORD* ) ( Source::m_pPrediction.Xor( ) + 0x1C ) = 0;
-	  }
-   } else {
-	  if ( *bSendPacket ) {
-		 this->commands_to_shift = 0;
-		 if ( g_Vars.globals.WasShooting || ( cmd->buttons & IN_ATTACK && local->CanShoot( ) ) ) {
-			this->commands_to_shift = this->will_shift_tickbase;
-			this->didnt_shift_tifckbase_previously = this->will_shift_tickbase == 0;
-			this->double_tapped = this->will_shift_tickbase == 13;
-		 }
-	  }
-   }
-
    if ( *bSendPacket ) {
+	   	this->commands_to_shift = 0;
+		if ( g_Vars.globals.WasShooting || ( cmd->buttons & IN_ATTACK && local->CanShoot( ) ) ) {
+			this->commands_to_shift = this->will_shift_tickbase;
+			this->didnt_shift_tifckbase_previously = this->will_shift_tickbase <= 0;
+			this->double_tapped = this->will_shift_tickbase >= 14;
+		}
+
 	  this->hold_tickbase_shift = 0;
-	  auto v10 = Source::m_pClientState->m_nChokedCommands( );
-	  if ( v10 >= 0 ) {
-		 auto v11 = cmd->command_number - v10;
-		 auto v33 = cmd->command_number - v10;
+	  auto choked_cmds = Source::m_pClientState->m_nChokedCommands( );
+	  if ( choked_cmds >= 0 ) {
+		 auto command_number = cmd->command_number - choked_cmds;
+		 auto next_command_number = cmd->command_number - choked_cmds;
 		 do {
-			auto v12 = &Source::m_pInput->m_pCommands[ cmd->command_number - 150 * ( v11 / 150 ) - v10 ];
-			if ( !v12 || IsTickcountValid( cmd->tick_count ) ) {
-			   auto v13 = --this->ticks_allowed;
-			   if ( v13 <= 0 )
-				  v13 = 0;
-			   this->ticks_allowed = v13;
+			auto pred_cmd = &Source::m_pInput->m_pCommands[ cmd->command_number - 150 * ( command_number / 150 ) - choked_cmds ];
+			if ( !pred_cmd || IsTickcountValid( cmd->tick_count ) ) {
+			   auto allowed_ticks = --this->ticks_allowed;
+			   if ( allowed_ticks <= 0 )
+				  allowed_ticks = 0;
+			   this->ticks_allowed = allowed_ticks;
 			}
-			v11 = v33 + 1;
-			--v10;
-			++v33;
-		 } while ( v10 >= 0 );
+			command_number = next_command_number + 1;
+			--choked_cmds;
+			++next_command_number;
+		 } while ( choked_cmds >= 0 );
 	  }
    }
 
-   auto v14 = this->ticks_allowed;
-   if ( v14 > this->max_choke ) {
-	  auto v15 = v14 - 1;
-	  this->ticks_allowed = v15;
-	  if ( v15 > 0 ) {
+   auto allowed_ticks = this->ticks_allowed;
+   if ( allowed_ticks > this->max_choke ) {
+	  auto next_ticks = allowed_ticks - 1;
+	  this->ticks_allowed = next_ticks;
+	  if ( next_ticks > 0 ) {
 		 this->over_choke_nr = cmd->command_number;
 	  } else {
 		 this->ticks_allowed = 0;
 	  }
 
-	  auto v30 = this->max_choke;
-	  if ( this->ticks_allowed > v30 )
-		 this->ticks_allowed = v30;
+	  auto max_allowed = this->max_choke;
+	  if ( this->ticks_allowed > max_allowed )
+		 this->ticks_allowed = max_allowed;
    }
 
 }
