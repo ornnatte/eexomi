@@ -460,7 +460,7 @@ namespace Source
    bool Create( void* reserved ) {
 	  auto& pPropManager = Engine::PropManager::Instance( );
 
-	  m_pClient = ( IBaseClientDLL* ) CreateInterface( XorStr( "client.dll" ), XorStr( "VClient" ) );
+	  m_pClient = ( IBaseClientDLL* ) CreateInterface( XorStr( "client.dll" ), XorStr( "VClient018" ) );
 
 	  if ( !m_pClient.IsValid( ) ) {
 		 Win32::Error( XorStr( "IBaseClientDLL is nullptr (Source::%s)" ), __FUNCTION__ );
@@ -472,21 +472,21 @@ namespace Source
 		 return false;
 	  }
 
-	  m_pEntList = ( IClientEntityList* ) CreateInterface( XorStr( "client.dll" ), XorStr( "VClientEntityList" ) );
+	  m_pEntList = ( IClientEntityList* ) CreateInterface( XorStr( "client.dll" ), XorStr( "VClientEntityList003" ) );
 
 	  if ( !m_pEntList.IsValid( ) ) {
 		 Win32::Error( XorStr( "IClientEntityList is nullptr (Source::%s)" ), __FUNCTION__ );
 		 return false;
 	  }
 
-	  m_pGameMovement = ( IGameMovement* ) CreateInterface( XorStr( "client.dll" ), XorStr( "GameMovement" ) );
+	  m_pGameMovement = ( IGameMovement* ) CreateInterface( XorStr( "client.dll" ), XorStr( "GameMovement001" ) );
 
 	  if ( !m_pGameMovement.IsValid( ) ) {
 		 Win32::Error( XorStr( "IGameMovement is nullptr (Source::%s)" ), __FUNCTION__ );
 		 return false;
 	  }
 
-	  m_pPrediction = ( IPrediction* ) CreateInterface( XorStr( "client.dll" ), XorStr( "VClientPrediction" ) );
+	  m_pPrediction = ( IPrediction* ) CreateInterface( XorStr( "client.dll" ), XorStr( "VClientPrediction001" ) );
 
 	  if ( !m_pPrediction.IsValid( ) ) {
 		 Win32::Error( XorStr( "IPrediction is nullptr (Source::%s)" ), __FUNCTION__ );
@@ -507,21 +507,21 @@ namespace Source
 		 return false;
 	  }
 
-	  m_pEngine = ( IVEngineClient* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "VEngineClient" ) );
+	  m_pEngine = ( IVEngineClient* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "VEngineClient014" ) );
 
 	  if ( !m_pEngine.IsValid( ) ) {
 		 Win32::Error( XorStr( "IVEngineClient is nullptr (Source::%s)" ), __FUNCTION__ );
 		 return false;
 	  }
 
-	  m_pPanel = ( IPanel* ) CreateInterface( XorStr( "vgui2.dll" ), XorStr( "VGUI_Panel" ) );
+	  m_pPanel = ( IPanel* ) CreateInterface( XorStr( "vgui2.dll" ), XorStr( "VGUI_Panel009" ) );
 
 	  if ( !m_pPanel.IsValid( ) ) {
 		 Win32::Error( XorStr( "IPanel is nullptr (Source::%s)" ), __FUNCTION__ );
 		 return false;
 	  }
 
-	  m_pSurface = ( ISurface* ) CreateInterface( XorStr( "vguimatsurface.dll" ), XorStr( "VGUI_Surface" ) );
+	  m_pSurface = ( ISurface* ) CreateInterface( XorStr( "vguimatsurface.dll" ), XorStr( "VGUI_Surface031" ) );
 
 	  if ( !m_pSurface.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pSurface is nullptr (Source::%s)" ), __FUNCTION__ );
@@ -535,7 +535,7 @@ namespace Source
 		 return false;
 	  }
 
-	  m_pCvar = ( ICVar* ) CreateInterface( XorStr( "vstdlib.dll" ), XorStr( "VEngineCvar" ) );
+	  m_pCvar = ( ICVar* ) CreateInterface( XorStr( "vstdlib.dll" ), XorStr( "VEngineCvar007" ) );
 
 	  if ( !m_pCvar.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pCvar is nullptr (Source::%s)" ), __FUNCTION__ );
@@ -549,28 +549,28 @@ namespace Source
 		 return false;
 	  }
 
-	  m_pModelRender = ( IVModelRender* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "VEngineModel" ) );
+	  m_pModelRender = ( IVModelRender* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "VEngineModel016" ) );
 
 	  if ( !m_pModelRender.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pModelRender is nullptr (Source::%s)" ), __FUNCTION__ );
 		 return false;
 	  }
 
-	  m_pMatSystem = ( IMaterialSystem* ) CreateInterface( XorStr( "materialsystem.dll" ), XorStr( "VMaterialSystem" ) );
+	  m_pMatSystem = ( IMaterialSystem* ) CreateInterface( XorStr( "materialsystem.dll" ), XorStr( "VMaterialSystem080" ) );
 
 	  if ( !m_pMatSystem.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pMatSystem is nullptr (Source::%s)" ), __FUNCTION__ );
 		 return false;
 	  }
 
-	  m_pPhysSurface = ( IPhysicsSurfaceProps* ) CreateInterface( XorStr( "vphysics.dll" ), XorStr( "VPhysicsSurfaceProps" ) );
+	  m_pPhysSurface = ( IPhysicsSurfaceProps* ) CreateInterface( XorStr( "vphysics.dll" ), XorStr( "VPhysicsSurfaceProps001" ) );
 
 	  if ( !m_pPhysSurface.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pPhysSurface is nullptr (Source::%s)" ), __FUNCTION__ );
 		 return false;
 	  }
 
-	  m_pEngineTrace = ( IEngineTrace* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "EngineTraceClient" ) );
+	  m_pEngineTrace = ( IEngineTrace* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "EngineTraceClient004" ) );
 
 	  if ( !m_pEngineTrace.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pEngineTrace is nullptr (Source::%s)" ), __FUNCTION__ );
@@ -596,7 +596,7 @@ namespace Source
 		 return false;
 	  }
 
-	  m_pModelInfo = ( IVModelInfo* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "VModelInfoClient" ) );
+	  m_pModelInfo = ( IVModelInfo* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "VModelInfoClient004" ) );
 
 	  if ( !m_pModelInfo.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pModelInfo is nullptr (Source::%s)" ), __FUNCTION__ );
@@ -611,7 +611,7 @@ namespace Source
 		 return false;
 	  }
 
-	  m_pDebugOverlay = ( IVDebugOverlay* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "VDebugOverlay" ) );
+	  m_pDebugOverlay = ( IVDebugOverlay* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "VDebugOverlay004" ) );
 
 	  if ( !m_pDebugOverlay.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pDebugOverlay is nullptr (Source::%s)" ), __FUNCTION__ );
@@ -625,7 +625,7 @@ namespace Source
 		 return false;
 	  }
 
-	  m_pEngineSound = ( IEngineSound* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "IEngineSoundClient" ) );
+	  m_pEngineSound = ( IEngineSound* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "IEngineSoundClient003" ) );
 
 	  if ( !m_pEngineSound.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pEngineSound is nullptr (Source::%s)" ), __FUNCTION__ );
@@ -639,14 +639,14 @@ namespace Source
 		 return false;
 	  }
 
-	  m_pLocalize = ( ILocalize* ) CreateInterface( XorStr( "localize.dll" ), XorStr( "Localize_" ) );
+	  m_pLocalize = ( ILocalize* ) CreateInterface( XorStr( "localize.dll" ), XorStr( "Localize_001" ) );
 
 	  if ( !m_pLocalize.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pLocalize is nullptr (Source::%s)" ), __FUNCTION__ );
 		 return false;
 	  }
 
-	  m_pStudioRender = ( IStudioRender* ) CreateInterface( XorStr( "studiorender.dll" ), XorStr( "VStudioRender" ) );
+	  m_pStudioRender = ( IStudioRender* ) CreateInterface( XorStr( "studiorender.dll" ), XorStr( "VStudioRender026" ) );
 
 	  if ( !m_pStudioRender.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pStudioRender is nullptr (Source::%s)" ), __FUNCTION__ );
@@ -660,21 +660,21 @@ namespace Source
 		 return false;
 	  }
 
-	  m_pRenderView = ( IVRenderView* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "VEngineRenderView" ) );
+	  m_pRenderView = ( IVRenderView* ) CreateInterface( XorStr( "engine.dll" ), XorStr( "VEngineRenderView014" ) );
 
 	  if ( !m_pRenderView.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pRenverView is nullptr (Source::%s)" ), __FUNCTION__ );
 		 return false;
 	  }
 
-	  m_pClientLeafSystem = ( IClientLeafSystem* ) CreateInterface( XorStr( "client.dll" ), XorStr( "ClientLeafSystem" ) );
+	  m_pClientLeafSystem = ( IClientLeafSystem* ) CreateInterface( XorStr( "client.dll" ), XorStr( "ClientLeafSystem002" ) );
 
 	  if ( !m_pClientLeafSystem.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pClientLeafSystem is nullptr (Source::%s)" ), __FUNCTION__ );
 		 return false;
 	  }
 
-	  m_pMDLCache = ( IMDLCache* ) CreateInterface( XorStr( "datacache.dll" ), XorStr( "MDLCache" ) );
+	  m_pMDLCache = ( IMDLCache* ) CreateInterface( XorStr( "datacache.dll" ), XorStr( "MDLCache004" ) );
 
 	  if ( !m_pMDLCache.IsValid( ) ) {
 		 Win32::Error( XorStr( "m_pMDLCache is nullptr (Source::%s)" ), __FUNCTION__ );
@@ -789,23 +789,23 @@ namespace Source
 	  g_Vars.viewmodel_offset_z->fnChangeCallback.m_Size = 0;
 
 	  RecvProp* prop = nullptr;
-	  pPropManager->GetProp( XorStr( "DT_SmokeGrenadeProjectile" ), XorStr( "m_bDidSmokeEffect" ), &prop );
-	  m_pDidSmokeEffectSwap = std::make_shared<RecvPropHook>( prop, &Hooked::m_nSmokeEffectTickBegin );
+	  //pPropManager->GetProp( XorStr( "DT_SmokeGrenadeProjectile" ), XorStr( "m_bDidSmokeEffect" ), &prop );
+	  //m_pDidSmokeEffectSwap = std::make_shared<RecvPropHook>( prop, &Hooked::m_nSmokeEffectTickBegin );
 
-	  pPropManager->GetProp( XorStr( "DT_CSRagdoll" ), XorStr( "m_flAbsYaw" ), &prop );
-	  m_pFlAbsYawSwap = std::make_shared<RecvPropHook>( prop, &Hooked::RecvProxy_m_flAbsYaw );
+	  //pPropManager->GetProp( XorStr( "DT_CSRagdoll" ), XorStr( "m_flAbsYaw" ), &prop );
+	  //m_pFlAbsYawSwap = std::make_shared<RecvPropHook>( prop, &Hooked::RecvProxy_m_flAbsYaw );
 
-	  auto& database = pPropManager->database;
-	  auto BaseOverlay = std::find( database.begin( ), database.end( ), XorStr( "DT_BaseAnimatingOverlay" ) );
+	  //auto& database = pPropManager->database;
+	  //auto BaseOverlay = std::find( database.begin( ), database.end( ), XorStr( "DT_BaseAnimatingOverlay" ) );
 
-	  if ( database.end( ) != BaseOverlay ) {
-		 auto OverlayVars = BaseOverlay->child_tables.front( );
-		 auto AnimOverlays = OverlayVars.child_tables.front( );
-		 auto anim_layer_6 = AnimOverlays.child_tables.at( 6 );
+	  //if ( database.end( ) != BaseOverlay ) {
+		 //auto OverlayVars = BaseOverlay->child_tables.front( );
+		 //auto AnimOverlays = OverlayVars.child_tables.front( );
+		 //auto anim_layer_6 = AnimOverlays.child_tables.at( 6 );
 
-		 auto playback = anim_layer_6.child_props.at( 2 );
-		 m_pPlaybackRateSwap = std::make_shared< RecvPropHook >( playback, &Hooked::RecvProxy_PlaybackRate );
-	  }
+		 //auto playback = anim_layer_6.child_props.at( 2 );
+		 //m_pPlaybackRateSwap = std::make_shared< RecvPropHook >( playback, &Hooked::RecvProxy_PlaybackRate );
+	  //}
 
 	  using namespace Hooked;
 

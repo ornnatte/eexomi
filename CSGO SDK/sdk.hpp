@@ -238,10 +238,10 @@ namespace Index
    namespace IBaseClientDLL
    {
 	  enum {
-		 GetAllClasses = 8,
-		 CreateMove = 22,
-		 FrameStageNotify = 37,
-		 IsChatRaised = 90,
+		  GetAllClasses = 8,
+		  CreateMove = 22,
+		  FrameStageNotify = 36,
+		  IsChatRaised = 90,
 	  };
    }
    namespace ModelDraw
@@ -322,13 +322,13 @@ namespace Index
    }
    namespace IPrediction
    {
-	  enum {
-		 Update = 3,
-		 CheckMovingGround = 18,
-		 RunCommand = 19,
-		 SetupMove = 20,
-		 FinishMove = 21,
-	  };
+	   enum {
+		   Update = 3,
+		   CheckMovingGround = 18,
+		   RunCommand = 19,
+		   SetupMove = 20,
+		   FinishMove = 21,
+	   };
    }
    namespace IMoveHelper
    {
