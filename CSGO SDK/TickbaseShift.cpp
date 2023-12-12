@@ -76,7 +76,7 @@ void C_TickbaseShift::SelectShift( void ) {
 			auto can_shifted_shoot = local->CanShoot( 13 );
 			auto can_shoot = local->CanShoot( this->will_shift_tickbase );
 			if ( can_shifted_shoot || !can_shoot && this->didnt_shift_tifckbase_previously ) {
-			   this->will_shift_tickbase = /*g_Vars.rage.double_tap_type == 1 ? 0 :*/ 13;
+			   this->will_shift_tickbase = /*g_Vars.rage.double_tap_type == 1 ? 0 :*/ 14;
 			   this->double_tapped = false;
 			} else {
 			   this->will_shift_tickbase = 0;

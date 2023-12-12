@@ -2002,7 +2002,7 @@ namespace Source
 				  best_point->hitbox_idx,
 				  best_point->damage );
 
-			   std::stringstream msg;
+			   std::string msg;
 
 			   auto FixedStrLenght = [] ( std::string str ) -> std::string {
 				  if ( ( int ) str[ 0 ] > 255 )
@@ -2055,50 +2055,50 @@ namespace Source
 
 			   player_info_t info;
 
-			#ifdef _DEBUG
-			   if ( Source::m_pEngine->GetPlayerInfo( best_point->target->player->entindex( ), &info ) ) {
-				  int ping = 0;
+			//#ifdef _DEBUG
+			//   if ( Source::m_pEngine->GetPlayerInfo( best_point->target->player->entindex( ), &info ) ) {
+			//	  int ping = 0;
 
-				  auto netchannel = Encrypted_t<INetChannel>( Source::m_pEngine->GetNetChannelInfo( ) );
-				  if ( !netchannel.IsValid( ) )
-					 ping = 0;
-				  else
-					 ping = static_cast< int >( netchannel->GetLatency( FLOW_OUTGOING ) * 1000.0f );
+			//	  auto netchannel = Encrypted_t<INetChannel>( Source::m_pEngine->GetNetChannelInfo( ) );
+			//	  if ( !netchannel.IsValid( ) )
+			//		 ping = 0;
+			//	  else
+			//		 ping = static_cast< int >( netchannel->GetLatency( FLOW_OUTGOING ) * 1000.0f );
 
-				  msg << XorStr( "fired shot at " ) << FixedStrLenght( info.szName ).c_str( );
-				  msg << XorStr( " | " );
-				  msg << TranslateHitbox( best_point->hitbox_idx ).c_str( );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " bt: " ) << TIME_TO_TICKS( lagData->m_History.front( ).m_flSimulationTime - best_point->target->record->m_flSimulationTime );
-				  msg << XorStr( " (" ) << lagData->m_History.front( ).m_flSimulationTime - best_point->target->record->m_flSimulationTime << XorStr( "s) " );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " hp: " ) << best_point->target->player->m_iHealth( );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " p hp: " ) << Math::Clamp<int>( best_point->target->player->m_iHealth( ) - int( best_point->damage ), 0, best_point->target->player->m_iHealth( ) );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " dmg: " ) << int( best_point->damage );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " hc: " ) << best_point->hitchance;
-				  msg << XorStr( " | " );
-				  msg << XorStr( " r: " ) << best_point->target->side << XorStr( " | " ) << g_Vars.globals.m_iResolverType2[ best_point->target->player->entindex( ) ] << XorStr( " | " ) << g_Vars.globals.m_iResolverType[ best_point->target->player->entindex( ) ];
-				  msg << XorStr( " | " );
-				  msg << XorStr( " safe: " ) << int( best_point->is_safe );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " s safe: " ) << int( best_point->is_static_safe );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " sp: " ) << int( *rageData->m_pSendPacket );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " shot: " ) << int( best_point->target->record->m_bIsShoting );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " miss: " ) << lagData->m_iMissedShots;
-				  msg << XorStr( " | " );
-				  msg << XorStr( " delay: " ) << rageData->m_iDelayTicksStored;
-				  msg << XorStr( " | " );
-				  msg << XorStr( " ping: " ) << int( ping );
+			//	  msg << XorStr( "fired shot at " ) << FixedStrLenght( info.szName ).c_str( );
+			//	  msg << XorStr( " | " );
+			//	  msg << TranslateHitbox( best_point->hitbox_idx ).c_str( );
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " bt: " ) << TIME_TO_TICKS( lagData->m_History.front( ).m_flSimulationTime - best_point->target->record->m_flSimulationTime );
+			//	  msg << XorStr( " (" ) << lagData->m_History.front( ).m_flSimulationTime - best_point->target->record->m_flSimulationTime << XorStr( "s) " );
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " hp: " ) << best_point->target->player->m_iHealth( );
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " p hp: " ) << Math::Clamp<int>( best_point->target->player->m_iHealth( ) - int( best_point->damage ), 0, best_point->target->player->m_iHealth( ) );
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " dmg: " ) << int( best_point->damage );
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " hc: " ) << best_point->hitchance;
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " r: " ) << best_point->target->side << XorStr( " | " ) << g_Vars.globals.m_iResolverType2[ best_point->target->player->entindex( ) ] << XorStr( " | " ) << g_Vars.globals.m_iResolverType[ best_point->target->player->entindex( ) ];
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " safe: " ) << int( best_point->is_safe );
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " s safe: " ) << int( best_point->is_static_safe );
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " sp: " ) << int( *rageData->m_pSendPacket );
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " shot: " ) << int( best_point->target->record->m_bIsShoting );
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " miss: " ) << lagData->m_iMissedShots;
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " delay: " ) << rageData->m_iDelayTicksStored;
+			//	  msg << XorStr( " | " );
+			//	  msg << XorStr( " ping: " ) << int( ping );
 
-				  ILoggerEvent::Get( )->PushEvent( msg.str( ), FloatColor( 0.5f, 0.5f, 0.5f ) );
-			   }
-			#endif
+			//	  ILoggerEvent::Get( )->PushEvent( msg.str( ), FloatColor( 0.5f, 0.5f, 0.5f ) );
+			//   }
+			//#endif
 
 			#ifdef BETA_MODE 
 			   if ( Source::m_pEngine->GetPlayerInfo( best_point->target->player->entindex( ), &info ) ) {
@@ -2110,36 +2110,39 @@ namespace Source
 				  else
 					 ping = static_cast< int >( netchannel->GetLatency( FLOW_OUTGOING ) * 1000.0f );
 
-				  msg << XorStr( "fired shot at " ) << FixedStrLenght( info.szName ).c_str( );
-				  msg << XorStr( " | " );
-				  msg << TranslateHitbox( best_point->hitbox_idx ).c_str( );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " bt: " ) << TIME_TO_TICKS( lagData->m_History.front( ).m_flSimulationTime - best_point->target->record->m_flSimulationTime );
-				  msg << XorStr( " (" ) << lagData->m_History.front( ).m_flSimulationTime - best_point->target->record->m_flSimulationTime << XorStr( "s) " );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " hp: " ) << best_point->target->player->m_iHealth( );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " p hp: " ) << Math::Clamp<int>( best_point->target->player->m_iHealth( ) - int( best_point->damage ), 0, best_point->target->player->m_iHealth( ) );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " dmg: " ) << int( best_point->damage );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " hc: " ) << best_point->hitchance;
-				  msg << XorStr( " | " );
-				  msg << XorStr( " r: " ) << best_point->target->side << XorStr( " | " ) << g_Vars.globals.m_iResolverType2[ best_point->target->player->entindex( ) ] << XorStr( " | " ) << g_Vars.globals.m_iResolverType[ best_point->target->player->entindex( ) ];
-				  msg << XorStr( " | " );
-				  msg << XorStr( " safe: " ) << int( best_point->is_safe );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " s safe: " ) << int( best_point->is_static_safe );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " sp: " ) << int( *rageData->m_pSendPacket );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " shot: " ) << int( best_point->target->record->m_bIsShoting );
-				  msg << XorStr( " | " );
-				  msg << XorStr( " miss: " ) << lagData->m_iMissedShots;
-				  msg << XorStr( " | " );
-				  msg << XorStr( " ping: " ) << int( ping );
+				  msg += XorStr( "fired shot at " ) + FixedStrLenght( info.szName );
+				  + XorStr( " | " );
+				  + TranslateHitbox( best_point->hitbox_idx ).c_str( );
+				  + XorStr( " | " );
+				  + XorStr( " bt: " ) + TIME_TO_TICKS( lagData->m_History.front( ).m_flSimulationTime - best_point->target->record->m_flSimulationTime );
+				  + XorStr( " (" ) + std::to_string( ( lagData->m_History.front( ).m_flSimulationTime - best_point->target->record->m_flSimulationTime ) ) + XorStr( "s) " );
+				  + XorStr( " | " );
+				  + XorStr( " hp: " ) + best_point->target->player->m_iHealth( );
+				  + XorStr( " | " );
+				  + XorStr( " p hp: " ) + Math::Clamp<int>( best_point->target->player->m_iHealth( ) - int( best_point->damage ), 0, best_point->target->player->m_iHealth( ) );
+				  + XorStr( " | " );
+				  + XorStr( " dmg: " ) + int( best_point->damage );
+				  + XorStr( " | " );
+				  + XorStr( " hc: " ) + std::to_string( best_point->hitchance );
+				  + XorStr( " | " );
+				  + XorStr( " r: " ) + std::to_string( best_point->target->side )
+					  + XorStr( " | " ) + std::to_string( g_Vars.globals.m_iResolverType2[ best_point->target->player->entindex( ) ] ) 
+					  + XorStr( " | " ) + std::to_string( g_Vars.globals.m_iResolverType[ best_point->target->player->entindex( ) ] );
 
-				  ILoggerEvent::Get( )->PushEvent( msg.str( ), FloatColor( 0.5f, 0.5f, 0.5f ) );
+				  + XorStr( " | " );
+				  + XorStr( " safe: " ) + int( best_point->is_safe );
+				  + XorStr( " | " );
+				  + XorStr( " s safe: " ) + int( best_point->is_static_safe );
+				  + XorStr( " | " );
+				  + XorStr( " sp: " ) + int( *rageData->m_pSendPacket );
+				  + XorStr( " | " );
+				  + XorStr( " shot: " ) + int( best_point->target->record->m_bIsShoting );
+				  + XorStr( " | " );
+				  + XorStr( " miss: " ) + lagData->m_iMissedShots;
+				  + XorStr( " | " );
+				  + XorStr( " ping: " ) + int( ping );
+
+				  Source::m_pCvar->ConsoleColorPrintf( Color( 125, 125, 125 ), msg.c_str( ) );
 			   }
 			#endif
 

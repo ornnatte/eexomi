@@ -1675,8 +1675,8 @@ void CEsp::Main( ) {
 
    int local_idx = m_LocalPlayer->m_entIndex;
 
-   //if ( g_Vars.esp.extended_esp )
-	//  IExtendedEsp::Get( )->Start( );
+   if ( g_Vars.esp.extended_esp )
+	  IExtendedEsp::Get( )->Start( );
 
    for ( int i = 1; i <= Source::m_pEntList->GetHighestEntityIndex( ); ++i ) {
 	  auto entity = ( C_BaseEntity* ) Source::m_pEntList->GetClientEntity( i );
@@ -2341,7 +2341,7 @@ void CEsp::AmmoBar( C_CSPlayer* player, Rect2D bbox ) {
 	  } else
 		 width = ( ( ( ( bbox.right - bbox.left ) * iClip ) / iClipMax ) );
 
-	  FloatColor col_black = FloatColor( 0, 0, 0, ( int ) ( this->m_flAplha[ player->entindex( ) ] * 0.40f ) );
+	  FloatColor col_black = FloatColor( 0, 0, 0, ( int ) ( this->m_flAplha[ player->entindex( ) ] * 0.65f ) );
 
 	  //	Render Outlile
 	  Render::Get( )->AddRectFilled( Vector4D( x - 1, y + h + 2, bbox.right + 1, y + h + 6 ), col_black );
@@ -2573,7 +2573,7 @@ const char* itemNames[] =
    XorStr( "Deagle" ),
    XorStr( "Dual Berettas" ),
    XorStr( "FiveseveN" ),
-   XorStr( "Glock" ),
+   XorStr( "Glock-18" ),
    XorStr( "none" ),
    XorStr( "none" ),
    XorStr( "AK-47" ),
@@ -2963,11 +2963,16 @@ void CEsp::DrawHealthBar( C_CSPlayer* player, Rect2D bbox ) {
    float x = bbox.left - 10, y = bbox.top, width = fabsf( bbox.bottom - bbox.top ) - ( ( ( fabsf( bbox.bottom - bbox.top ) * prev_player_hp[ player->entindex( ) ] ) / player_hp_max ) );
    float w = 4, h = fabsf( bbox.bottom - bbox.top );
 
-   FloatColor fill = FloatColor( static_cast< int > ( ( 130.0f - player_hp * 1.3f ) ), static_cast< int > ( ( int ) ( player_hp * 2.55f ) ), 10, static_cast< int > ( ( m_flAplha[ player->entindex( ) ] ) ) );
-   auto color = FloatColor( 255, 255, 255, static_cast< int > ( ( m_flAplha[ player->entindex( ) ] * 0.85f ) ) );
+
+   const int red = std::min((510 * (100 - player_hp)) / 100, 255);
+   const int green = std::min((510 * player_hp) / 100, 255);
+
+   FloatColor fill = FloatColor(red, green, 0, static_cast<int> ((m_flAplha[player->entindex()])));
+
+   auto color = FloatColor( 255, 255, 255, static_cast< int > ( ( m_flAplha[ player->entindex( ) ] ) ) );
 
    Render::Get( )->SetTextFont( FONT_VISITOR );
-   Render::Get( )->AddRectFilled( Vector2D( x + 4, y - 1 ), Vector2D( x + w + 4, y + h + 1 ), FloatColor( 0, 0, 0, ( int ) ( this->m_flAplha[ player->entindex( ) ] * 0.40f ) ) );
+   Render::Get( )->AddRectFilled( Vector2D( x + 4, y - 1 ), Vector2D( x + w + 4, y + h + 1 ), FloatColor( 0, 0, 0, ( int ) ( this->m_flAplha[ player->entindex( ) ] * 0.65f ) ) );
    Render::Get( )->AddRectFilled( Vector2D( x + 5, y + width /*+ 1*/ ), Vector2D( x + w - 1 + 4, y + h ), fill );
 
    if ( player_hp != 100 )
@@ -2977,7 +2982,7 @@ void CEsp::DrawHealthBar( C_CSPlayer* player, Rect2D bbox ) {
 void CEsp::DrawInfo( C_CSPlayer* player, Rect2D bbox, player_info_t player_info ) {
    std::vector<std::pair<FloatColor, std::string>> m_vecTextInfo;
 
-   //auto color = FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) );
+   //auto color = FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] ) );
 
    auto animState = player->m_PlayerAnimState( );
    if ( !animState )
@@ -2987,7 +2992,7 @@ void CEsp::DrawInfo( C_CSPlayer* player, Rect2D bbox, player_info_t player_info 
    color.a = m_flAplha[ player->entindex( ) ] / 255.0f;
 
    if ( g_Vars.esp.draw_money )
-	  m_vecTextInfo.emplace_back( FloatColor( 133, 198, 22, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "$" ) + std::to_string( player->m_iAccount( ) ) );
+	  m_vecTextInfo.emplace_back( FloatColor( 155, 210, 100, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "$" ) + std::to_string( player->m_iAccount( ) ) );
 
    if ( g_Vars.esp.draw_armor && player->m_ArmorValue( ) > 0 ) {
 	  std::string name = player->m_bHasHelmet( ) ? XorStr( "HK" ) : XorStr( "K" );
@@ -2999,55 +3004,55 @@ void CEsp::DrawInfo( C_CSPlayer* player, Rect2D bbox, player_info_t player_info 
    char buffer[ 32 ];
    sprintf_s( buffer, XorStr( "R: [%i] | [%i]" ), g_Vars.globals.m_iResolverType2[ player->entindex( ) ], g_Vars.globals.m_iResolverSide[ player->entindex( ) ] );
 
-   m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), buffer );
+   m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), buffer );
 
 	char buffer[ 32 ];
    sprintf_s( buffer, XorStr( "R: [%i]" ), g_Vars.globals.m_iResolverType2[ player->entindex( ) ] );
 
-   m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), buffer );
+   m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), buffer );
 
    char buffer3[ 32 ];
    sprintf_s( buffer3, XorStr( "R2: [%i]" ), g_Vars.globals.m_iResolverType[ player->entindex( ) ] );
 
-   m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), buffer3 );
+   m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), buffer3 );
 
    char buffer2[ 32 ];
    sprintf_s( buffer2, XorStr( "P: [%i]" ), g_Vars.globals.m_iRecordPriority[ player->entindex( ) ] );
 
-   m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), buffer2 );
+   m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), buffer2 );
 
    */
 
    /* char buffer2[ 128 ];
 	sprintf_s( buffer2, XorStr( "desync delta: [%i]" ), int( animState->GetDesyncDelta( ) ) );
 
-	m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), buffer2 );*/
+	m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), buffer2 );*/
 
    if ( player->m_bIsScoped( ) && g_Vars.esp.draw_scoped )
-	  m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "ZOOM" ) );
+	  m_vecTextInfo.emplace_back( FloatColor( 0, 175, 255, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "ZOOM" ) );
 
    if ( g_Vars.esp.draw_flashed && player->m_flFlashDuration( ) > 1.f )
-	  m_vecTextInfo.emplace_back( FloatColor( 255, 216, 0, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "FLASHED" ) );
+	  m_vecTextInfo.emplace_back( FloatColor( 255, 216, 0, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "FLASHED" ) );
 
    if ( IsFakeDucking( player ) )
-	  m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "FD" ) );
+	  m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "FD" ) );
 
    int ping = ( *Source::m_pPlayerResource.Xor( ) )->GetPlayerPing( player->entindex( ) );
 
    if ( g_Vars.esp.draw_hit ) {
 	  if ( g_Vars.globals.m_iResolverType2[ player->entindex( ) ] == 3 )
-		 m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "HIT" ) );
+		 m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "HIT" ) );
    }
 
    /*if ( g_Vars.esp.draw_hostage  )
-   m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "Hostage" ) );*/
+   m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "Hostage" ) );*/
 
    if ( g_Vars.esp.draw_distance ) {
 	  C_CSPlayer* local = C_CSPlayer::GetLocalPlayer( );
 	  if ( local && !local->IsDead( ) ) {
 		 float distance = local->GetAbsOrigin( ).Distance( player->GetAbsOrigin( ) ) * 0.01904f;
 		 std::string str = std::to_string( int( distance ) ) + XorStr( " FT" );
-		 m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( str.c_str( ) ) );
+		 m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( str.c_str( ) ) );
 	  }
    }
 
@@ -3064,12 +3069,12 @@ void CEsp::DrawInfo( C_CSPlayer* player, Rect2D bbox, player_info_t player_info 
 	  auto definition_index = weapon->m_Item( ).m_iItemDefinitionIndex( );
 
 	  if ( definition_index == WEAPON_C4 && g_Vars.esp.draw_bombc4 )
-		 m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "BOMB" ) );
+		 m_vecTextInfo.emplace_back( FloatColor( 255, 0, 0, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "C4" ) );
 
 	  if ( definition_index == WEAPON_ZEUS && g_Vars.esp.draw_taser ) {
 		 C_CSPlayer* local = C_CSPlayer::GetLocalPlayer( );
 		 if ( !local || local->IsDead( ) )
-			m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "TASER" ) );
+			m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "ZEUS" ) );
 		 else {
 			auto weapon_data = ( ( C_WeaponCSBaseGun* ) weapon )->GetCSWeaponData( ).Xor( );
 
@@ -3080,9 +3085,9 @@ void CEsp::DrawInfo( C_CSPlayer* player, Rect2D bbox, player_info_t player_info 
 			float maxRange = weapon_data->m_flWeaponRange;
 
 			if ( distance < maxRange )
-			   m_vecTextInfo.emplace_back( FloatColor( 229, 57, 53, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "TASER" ) );
+			   m_vecTextInfo.emplace_back( FloatColor( 229, 57, 53, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "ZEUS" ) );
 			else
-			   m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "TASER" ) );
+			   m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "ZEUS" ) );
 		 }
 	  }
    }
@@ -3090,18 +3095,18 @@ void CEsp::DrawInfo( C_CSPlayer* player, Rect2D bbox, player_info_t player_info 
 
 
    if ( g_Vars.esp.draw_reloading && player->IsReloading( ) ) {
-	  m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "R" ) );
+	  m_vecTextInfo.emplace_back( FloatColor( 108, 160, 203, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "R" ) );
    }
 
    std::string ping_str = std::to_string( ping ) + XorStr( " MS" );
 
    if ( g_Vars.esp.draw_ping ) {
 	  if ( ping <= 60 )
-		 m_vecTextInfo.emplace_back( FloatColor( 133, 198, 22, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), ping_str.c_str( ) );
+		 m_vecTextInfo.emplace_back( FloatColor( 133, 198, 22, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), ping_str.c_str( ) );
 	  else if ( ping > 60 && ping < 100 )
-		 m_vecTextInfo.emplace_back( FloatColor( 253, 216, 53, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), ping_str.c_str( ) );
+		 m_vecTextInfo.emplace_back( FloatColor( 253, 216, 53, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), ping_str.c_str( ) );
 	  else if ( ping >= 100 )
-		 m_vecTextInfo.emplace_back( FloatColor( 229, 57, 53, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), ping_str.c_str( ) );
+		 m_vecTextInfo.emplace_back( FloatColor( 229, 57, 53, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), ping_str.c_str( ) );
    }
 #if 0
    m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, 255 ), XorStr( "6 W:%f" ) + std::to_string( player->m_AnimOverlay( ).Element( 6 ).m_flWeight ) );
@@ -3116,8 +3121,8 @@ void CEsp::DrawInfo( C_CSPlayer* player, Rect2D bbox, player_info_t player_info 
 
    auto lag_data = Engine::LagCompensation::Get( )->GetLagData( player->m_entIndex );
    if ( lag_data.IsValid( ) ) {
-	  m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "SIDE: " ) + std::to_string( lag_data->m_iResolverSide ) );
-	  m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] * 0.8f ) ), XorStr( "TYPE: " ) + std::to_string( lag_data->m_iResolverType ) );
+	  m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "SIDE: " ) + std::to_string( lag_data->m_iResolverSide ) );
+	  m_vecTextInfo.emplace_back( FloatColor( 255, 255, 255, ( int ) ( m_flAplha[ player->entindex( ) ] ) ), XorStr( "TYPE: " ) + std::to_string( lag_data->m_iResolverType ) );
    }
 
 #endif
@@ -3284,7 +3289,7 @@ void CEsp::DrawBottomInfo( C_CSPlayer* player, Rect2D bbox, player_info_t player
 
 void CEsp::DrawName( C_CSPlayer* player, Rect2D bbox, player_info_t player_info ) {
    auto clr = g_Vars.esp.name_color;
-   clr.a = m_flAplha[ player->entindex( ) ] / 255.0f;
+   clr.a *= m_flAplha[ player->entindex( ) ] / 255.0f;
    Render::Get( )->SetTextFont( FONT_VERDANA );
    Render::Get( )->AddText( Vector2D( bbox.left + ( bbox.right - bbox.left ) * 0.5f, bbox.top - 2.f ),
 							clr,
