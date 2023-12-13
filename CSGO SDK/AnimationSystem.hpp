@@ -86,6 +86,7 @@ namespace Engine
 
 	  float m_flSpawnTime;
 	  float m_flSimulationTime;
+	  float m_flLastSimulatedSimTime;
 	  float m_flOldSimulationTime;
 
 	  Vector m_vecOrigin;

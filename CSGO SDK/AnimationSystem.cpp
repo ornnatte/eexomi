@@ -440,6 +440,7 @@ namespace Engine
 	  auto pThis = Encrypted_t<C_AnimationData>( this );
 
 	  if ( pThis->player != player ) {
+		 pThis->m_flLastSimulatedSimTime = 0.0f;
 		 pThis->m_flSpawnTime = 0.0f;
 		 pThis->m_flSimulationTime = 0.0f;
 		 pThis->m_flOldSimulationTime = 0.0f;
@@ -465,9 +466,12 @@ namespace Engine
 		 return;
 	  }
 
-	  if ( pThis->m_flOldSimulationTime == pThis->m_flSimulationTime ) {
+	  if ( pThis->m_flOldSimulationTime >= pThis->m_flSimulationTime ) {
+		  pThis->m_flSimulationTime = pThis->m_flLastSimulatedSimTime;
 		 return;
 	  }
+
+	  pThis->m_flLastSimulatedSimTime = pThis->m_flSimulationTime;
 
 	  if ( pThis->m_bIsDormant ) {
 		 pThis->m_iTicksAfterDormancy = 0;
@@ -904,7 +908,6 @@ namespace Engine
 		 } else {
 			// TODO: improve this check
 			auto lean_check = [&] ( ) {
-			#if 1
 			   // yaw rate
 			   if ( int( current->m_serverAnimOverlays[ 6 ].m_flWeight * 1000.0f ) != int( previous->m_serverAnimOverlays[ 6 ].m_flWeight * 1000.0f ) )
 				  return false;
@@ -915,7 +918,7 @@ namespace Engine
 
 			   if ( int( current->m_serverAnimOverlays[ 12 ].m_flWeight * 1000.0f ) == int( previous->m_serverAnimOverlays[ 12 ].m_flWeight * 1000.0f ) )
 				  return true;
-			#endif
+
 			   return false;
 			};
 
