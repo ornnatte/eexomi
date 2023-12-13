@@ -137,7 +137,7 @@ void CHitmarker::PlayerHurt( IGameEvent* pEvent ) {
    if ( !pAttacker || !pVictim || pAttacker != LocalPlayer )
 	  return;
 
-   Vector pEnemyPos = pVictim->GetAbsOrigin( );
+   Vector pEnemyPos = pVictim->m_vecOrigin( );
    ImpactInfo BestImpact;
 
    float pBestImpactDistance = -1;

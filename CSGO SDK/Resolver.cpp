@@ -489,17 +489,17 @@ namespace Engine
 				  g_BruteforceData[ player->m_entIndex ].IsNeedToSwitchSide = false;
 
 				  if ( resolved_side != INT_MAX ) {
-				  #ifdef DevelopMode
-					 if ( g_Vars.esp.event_resolver ) {
-						std::stringstream msg;
-						msg << XorStr( "resolver correction [" );
-						msg << snapshot->resolverIdx;
-						msg << XorStr( "] -> [" );
-						msg << resolved_side;
-						msg << XorStr( "]" );
-						ILoggerEvent::Get( )->PushEvent( msg.str( ), FloatColor( 1.0f, 1.0f, 1.0f ) );
-					 }
-				  #endif
+				  //#ifdef DevelopMode
+					 //if ( g_Vars.esp.event_resolver ) {
+						//std::stringstream msg;
+						//msg << XorStr( "resolver correction [" );
+						//msg << snapshot->resolverIdx;
+						//msg << XorStr( "] -> [" );
+						//msg << resolved_side;
+						//msg << XorStr( "]" );
+						//ILoggerEvent::Get( )->PushEvent( msg.str( ), FloatColor( 1.0f, 1.0f, 1.0f ) );
+					 //}
+				  //#endif
 					 g_BruteforceData[ player->m_entIndex ].IsResolved = true;
 					 g_BruteforceData[ player->m_entIndex ].LastHitIndex = it->snapshot->SideIndex;
 					 g_BruteforceData[ player->m_entIndex ].SideIndex = it->snapshot->SideIndex;
@@ -528,7 +528,6 @@ namespace Engine
 			}
 
 			// correct resolver
-		 #if 1
 			{
 			   std::vector<C_TraceData> success_data;
 
@@ -572,7 +571,6 @@ namespace Engine
 				  }
 			   }
 			}
-		 #endif
 
 			this->m_Shapshots.erase( it->snapshot );
 			it = this->m_Weaponfire.erase( it );

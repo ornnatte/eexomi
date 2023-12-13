@@ -429,8 +429,8 @@ bool CEsp::Begin( C_CSPlayer* player ) {
    Vector2D points[ 8 ];
    Rect2D bbox;
 
-   Vector head = player->GetAbsOrigin( ) + Vector( 0, 0, player->GetCollideable( )->OBBMaxs( ).z );
-   Vector origin = player->GetAbsOrigin( );
+   Vector origin = player->m_vecOrigin( );
+   Vector head = player->m_vecOrigin( ) + Vector( 0, 0, player->GetCollideable( )->OBBMaxs( ).z );
    origin.z -= 5;
 
    if ( !WorldToScreen( head, m_Data.head_pos ) ||

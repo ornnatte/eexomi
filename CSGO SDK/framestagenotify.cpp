@@ -292,7 +292,6 @@ namespace Hooked
 					 Engine::C_SetupBones::AttachmentHelper( player, player->m_pStudioHdr( ) );
 
 			   }
-			   player->SetAbsOrigin( player->m_vecOrigin( ) );
 
 			   static bool reset_spotted = false;
 

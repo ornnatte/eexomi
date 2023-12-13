@@ -81,11 +81,6 @@ float Autowall::ScaleDamage( C_CSPlayer* player, float damage, float weapon_armo
 	  break;
 	  case Hitgroup_Chest:
 	  damage *= body_scale;
-	  case Hitgroup_Gear:
-	  // notice, sometimes body_scale = -4.0, look at CTakeDamageInfo::m_bitsDamageType:
-	  // armor_value should <= 0, DMG_BLAST, not DMG_SHOCK, not teamdamage?
-	  // well i guess, we using DMG_BULLET, so dont care
-	  damage *= body_scale;
 	  break;
 	  case Hitgroup_Stomach:
 	  damage = ( damage * 1.25f ) * body_scale;
@@ -97,6 +92,12 @@ float Autowall::ScaleDamage( C_CSPlayer* player, float damage, float weapon_armo
 	  case Hitgroup_LeftLeg:
 	  case Hitgroup_RightLeg:
 	  damage = ( damage * 0.75f ) * body_scale;
+	  break;
+	  case Hitgroup_Gear:
+	  // notice, sometimes body_scale = -4.0, look at CTakeDamageInfo::m_bitsDamageType:
+	  // armor_value should <= 0, DMG_BLAST, not DMG_SHOCK, not teamdamage?
+	  // well i guess, we using DMG_BULLET, so dont care
+	  damage *= body_scale;
 	  break;
 	  default:
 	  break;
