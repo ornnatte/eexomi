@@ -2222,8 +2222,8 @@ void CEsp::Main( ) {
 	  }
    }
 
-   //if ( g_Vars.esp.extended_esp )
-	 // IExtendedEsp::Get( )->Finish( );
+   if ( g_Vars.esp.extended_esp )
+	  IExtendedEsp::Get( )->Finish( );
 
 #if 0
    extern Engine::C_LagRecord extrapolated;

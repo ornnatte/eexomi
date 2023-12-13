@@ -187,42 +187,6 @@ void Autowall::ClipTraceToPlayers( const Vector& vecAbsStart, const Vector& vecA
 
 //TODO: Improve this part, missed shot due to occulusion
 bool Autowall::TraceToExit( CGameTrace* pEnterTrace, Vector vecStartPos, Vector vecDirection, CGameTrace* pExitTrace ) { 
-#if 0
-   static auto trace_to_exit = Memory::Scan( XorStr( "client.dll" ), XorStr( "55 8B EC 83 EC 30 F3 0F 10 75 ??" ) );
-   if ( !trace_to_exit )
-	  return false;
-
-   // ghetto, but okay
-   static auto sv_clip_penetration_traces_to_players = Source::m_pCvar->FindVar( XorStr( "sv_clip_penetration_traces_to_players" ) );
-
-   auto original = false;
-   if ( sv_clip_penetration_traces_to_players ) {
-	  original = sv_clip_penetration_traces_to_players->GetBool( );
-	  sv_clip_penetration_traces_to_players->SetValue( false );
-   }
-
-   Vector kek;
-   Vector& pStart = kek;
-
-   _asm
-   {
-	  push pExitTrace
-	  push vecDirection.z
-	  push vecDirection.y
-	  push vecDirection.x
-	  push vecStartPos.z
-	  push vecStartPos.y
-	  push vecStartPos.x
-	  mov edx, pEnterTrace
-	  mov ecx, pStart
-	  call trace_to_exit
-	  add esp, 0x1C
-   }
-
-   //  if ( sv_clip_penetration_traces_to_players ) {
-   //  sv_clip_penetration_traces_to_players->SetValue( original );
-   //  }
-#else
    int enter_point_contents = 0;
    int point_contents = 0;
 
@@ -332,95 +296,82 @@ bool Autowall::TraceToExit( CGameTrace* pEnterTrace, Vector vecStartPos, Vector 
    } while ( fDistance <= 90.0f );
 
    return false;
-#endif
 }
 
-bool Autowall::HandleBulletPenetration( Encrypted_t<C_FireBulletData> data ) {
-   // can we penetrate?  
-   if ( data->m_WeaponData->m_flPenetration <= 0.f )
-	  return false;
+bool Autowall::HandleBulletPenetration(Encrypted_t<C_FireBulletData> data) {
+	// can we penetrate?  
+	if (data->m_WeaponData->m_flPenetration <= 0.f)
+		return false;
 
-   if ( data->m_iPenetrationCount <= 0 )
-	  return false;
+	if (data->m_iPenetrationCount <= 0)
+		return false;
 
-   auto contents_grate = data->m_EnterTrace.contents & CONTENTS_GRATE;
-   auto surf_nodraw = data->m_EnterTrace.surface.flags & SURF_NODRAW;
-   auto enter_material = data->m_EnterSurfaceData->game.material;
+	auto contents_grate = data->m_EnterTrace.contents & CONTENTS_GRATE;
+	auto surf_nodraw = data->m_EnterTrace.surface.flags & SURF_NODRAW;
+	auto enter_material = data->m_EnterSurfaceData->game.material;
 
-   const bool is_solid_surf = data->m_EnterTrace.contents >> 3 & CONTENTS_SOLID;
-   const bool is_light_surf = data->m_EnterTrace.surface.flags >> 7 & SURF_LIGHT;
+	const bool is_solid_surf = data->m_EnterTrace.contents >> 3 & CONTENTS_SOLID;
+	const bool is_light_surf = data->m_EnterTrace.surface.flags >> 7 & SURF_LIGHT;
 
-   CGameTrace exit_trace = {};
-   if ( !TraceToExit( &data->m_EnterTrace, data->m_EnterTrace.endpos, data->m_vecDirection, &exit_trace ) ) {
-	  if ( !( Source::m_pEngineTrace->GetPointContents( data->m_EnterTrace.endpos, MASK_SHOT_HULL, 0 ) & MASK_SHOT_HULL ) )
-		 return false;
-   }
+	CGameTrace exit_trace = {};
+	if (!TraceToExit(&data->m_EnterTrace, data->m_EnterTrace.endpos, data->m_vecDirection, &exit_trace)) {
+		if (!(Source::m_pEngineTrace->GetPointContents(data->m_EnterTrace.endpos, MASK_SHOT_HULL, 0) & MASK_SHOT_HULL))
+			return false;
+	}
 
-   auto enter_penetration_modifier = data->m_EnterSurfaceData->game.flPenetrationModifier;
+	auto enter_penetration_modifier = data->m_EnterSurfaceData->game.flPenetrationModifier;
 
-   auto exit_surface_data = Source::m_pPhysSurface->GetSurfaceData( exit_trace.surface.surfaceProps );
+	auto exit_surface_data = Source::m_pPhysSurface->GetSurfaceData(exit_trace.surface.surfaceProps);
 
-   if ( !exit_surface_data )
-	  return false;
+	if (!exit_surface_data)
+		return false;
 
-   auto exit_material = exit_surface_data->game.material;
-   auto exit_penetration_modifier = exit_surface_data->game.flPenetrationModifier;
-   auto combined_damage_modifier = 0.16f;
-   auto combined_penetration_modifier = ( enter_penetration_modifier + exit_penetration_modifier ) * 0.5f;
-   if ( enter_material == CHAR_TEX_GLASS || enter_material == CHAR_TEX_GRATE ) {
-	  combined_penetration_modifier = 3.f;
-	  combined_damage_modifier = 0.05f;
-   } else if ( contents_grate || surf_nodraw ) {
-	  combined_penetration_modifier = 1.f;
-   } else if ( enter_material == CHAR_TEX_FLESH && ( data->m_Player->IsTeammate( ( C_CSPlayer* ) ( data->m_EnterTrace.hit_entity ) ) ) &&
-			   g_Vars.ff_damage_reduction_bullets->GetFloat( ) == 0.f ) {
-	  if ( g_Vars.ff_damage_bullet_penetration->GetFloat( ) == 0.f )
-		 return false;
+	auto exit_material = exit_surface_data->game.material;
+	auto exit_penetration_modifier = exit_surface_data->game.flPenetrationModifier;
+	auto combined_damage_modifier = 0.16f;
+	auto combined_penetration_modifier = (enter_penetration_modifier + exit_penetration_modifier) * 0.5f;
+	if (enter_material == CHAR_TEX_GLASS || enter_material == CHAR_TEX_GRATE) {
+		combined_penetration_modifier = 3.f;
+		combined_damage_modifier = 0.05f;
+	}
+	else if (contents_grate || surf_nodraw) {
+		combined_penetration_modifier = 1.f;
+	}
+	else if (enter_material == CHAR_TEX_FLESH && (data->m_Player->IsTeammate((C_CSPlayer*)(data->m_EnterTrace.hit_entity))) &&
+		g_Vars.ff_damage_reduction_bullets->GetFloat() == 0.f) {
+		if (g_Vars.ff_damage_bullet_penetration->GetFloat() == 0.f)
+			return false;
 
-	  combined_penetration_modifier = g_Vars.ff_damage_bullet_penetration->GetFloat( );
-	  combined_damage_modifier = 0.16f;
-   }
+		combined_penetration_modifier = g_Vars.ff_damage_bullet_penetration->GetFloat();
+		combined_damage_modifier = 0.16f;
+	}
 
-   if ( enter_material == exit_material ) {
-	  if ( exit_material == CHAR_TEX_WOOD || exit_material == CHAR_TEX_CARDBOARD )
-		 combined_penetration_modifier = 3.f;
-	  else if ( exit_material == CHAR_TEX_PLASTIC )
-		 combined_penetration_modifier = 2.f;
-   }
+	if (enter_material == exit_material) {
+		if (exit_material == CHAR_TEX_WOOD || exit_material == CHAR_TEX_CARDBOARD)
+			combined_penetration_modifier = 3.f;
+		else if (exit_material == CHAR_TEX_PLASTIC)
+			combined_penetration_modifier = 2.f;
+	}
 
-  /* if ( enter_material == 71 || enter_material == 89 ) {
-	  combined_damage_modifier = 0.050000001;
-	  combined_penetration_modifier = 3.0;
-   } else if ( is_solid_surf || is_light_surf ) {
-	  combined_damage_modifier = 0.16;
-	  combined_penetration_modifier = 1.0;
-   } else {
-	  combined_damage_modifier = 0.16f;
-	  combined_penetration_modifier = ( enter_penetration_modifier + exit_penetration_modifier ) * 0.5f;
-   }
+	// Correct damage calculation
+	auto thickness = (exit_trace.endpos - data->m_EnterTrace.endpos).Length();
+	thickness *= thickness;
+	thickness *= fmaxf(0.f, 1.0f / combined_penetration_modifier);
+	thickness /= 24.0f;
 
-   if ( enter_material == exit_material ) {
-	  if ( exit_material == CHAR_TEX_WOOD || exit_material == CHAR_TEX_CARDBOARD )
-		 combined_penetration_modifier = 3.f;
-	  else if ( exit_material == CHAR_TEX_PLASTIC )
-		 combined_penetration_modifier = 2.f;
-   }*/
+	const auto v35 = (data->m_flCurrentDamage * combined_damage_modifier) + fmaxf(0.f, 1.0f / combined_penetration_modifier) * 3.0f
+		* fmaxf(0.0f, (3.0f / data->m_WeaponData->m_flPenetration) * 1.25f);
 
-   // Correct damage calculation
-   auto penetration_modifier = std::fmaxf( 0.f, 1.f / combined_penetration_modifier );
-   auto penetration_distance = ( exit_trace.endpos - data->m_EnterTrace.endpos ).Length( );
-   penetration_distance = ( ( penetration_distance * penetration_distance ) * penetration_modifier ) * 0.041666668f;
+	const auto lost_damage = fmaxf(0.0f, v35 + thickness);
 
-   auto damage_modifier = std::fmaxf( 0.f, ( 3.f / data->m_WeaponData->m_flPenetration ) * 1.25f ) * penetration_modifier * 3.f
-	  + ( data->m_flCurrentDamage * combined_damage_modifier ) + penetration_distance;
+	if (lost_damage > data->m_flCurrentDamage)
+		return false;
 
-   auto damage_lost = std::fmaxf( 0.f, damage_modifier );
-   if ( damage_lost > data->m_flCurrentDamage )
-	  return false;
+	if (lost_damage > 0.f)
+		data->m_flCurrentDamage -= lost_damage;
 
-   data->m_flCurrentDamage -= damage_lost;
-   if ( data->m_flCurrentDamage < 1.0f )
-	  return false;
+	if (data->m_flCurrentDamage < 1.f)
+		return false;
 
    data->m_vecStart = exit_trace.endpos;
    --data->m_iPenetrationCount;
@@ -512,7 +463,7 @@ float Autowall::FireBullets( Encrypted_t<C_FireBulletData> data ) {
    #endif
 
 	  data->m_EnterSurfaceData = Source::m_pPhysSurface->GetSurfaceData( data->m_EnterTrace.surface.surfaceProps );
-	  if ( data->m_flTraceLength > 3000.0f && data->m_WeaponData->m_flPenetration > 0.f
+	  if ( data->m_flTraceLength > 3150.0f && data->m_WeaponData->m_flPenetration > 0.f
 		   || data->m_EnterSurfaceData->game.flPenetrationModifier < 0.1f ) {
 		 data->m_iPenetrationCount = 0;
 		 break;

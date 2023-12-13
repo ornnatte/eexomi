@@ -993,7 +993,7 @@ namespace Source
 
 	  const auto is_capsule = hitbox->m_flRadius != -1.f;
 
-	  const auto max_traces = 256;
+	  const auto max_traces = 255;
 	  auto minimal_hits = int( float( max_traces ) * ( chance * 0.01f ) );
 	  auto hits = 0;
 	  for ( int i = 0; i < max_traces; ++i ) {
@@ -1005,11 +1005,10 @@ namespace Source
 
 		 float m_flRecoilIndex = rageData->m_pWeapon->m_flRecoilIndex( );
 		 if ( rageData->m_pWeapon->m_iItemDefinitionIndex( ) == WEAPON_REVOLVER ) {
-		 #if 0
 			flRand1 = 1.f - flRand1 * flRand1;
 			flRand2 = 1.f - flRand2 * flRand2;
-		 #endif
-		 } else if ( rageData->m_pWeapon->m_iItemDefinitionIndex( ) == WEAPON_NEGEV && m_flRecoilIndex < 3.f ) {
+		 } 
+		 else if ( rageData->m_pWeapon->m_iItemDefinitionIndex( ) == WEAPON_NEGEV && m_flRecoilIndex < 3.f ) {
 			for ( int x = 3; x > m_flRecoilIndex; --x ) {
 			   flRand1 *= flRand1;
 			   flRand2 *= flRand2;
@@ -1062,7 +1061,7 @@ namespace Source
 
 		 // abort if hitchance is already sufficent.
 		 if ( static_cast< float >( hits ) / static_cast< float >( max_traces ) >= chance / 100.f )
-			return true;
+			break;
 
 		 // abort if we can no longer reach hitchance.
 		 if ( static_cast< float >( hits + max_traces - i ) / static_cast< float >( max_traces ) < chance / 100.f )
