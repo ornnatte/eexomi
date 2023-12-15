@@ -547,7 +547,7 @@ namespace Engine
 				  continue;
 
 			   using UpdateDispatchLayer = void( __thiscall* )( void*, C_AnimationLayer*, CStudioHdr*, int );
-			   Memory::VCall< UpdateDispatchLayer >( player, 246 )( player, &player->m_AnimOverlay( ).Element( i ),
+			   Memory::VCall< UpdateDispatchLayer >( player, 241 )( player, &player->m_AnimOverlay( ).Element( i ),
 																	weaponWorldModel->m_pStudioHdr( ), player->m_AnimOverlay( ).Element( i ).m_nSequence );
 			}
 		 }

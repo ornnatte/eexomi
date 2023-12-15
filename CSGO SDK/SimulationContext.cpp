@@ -39,19 +39,14 @@ void SimulationContext::InitSimulationContext( C_CSPlayer* player ) {
 
    //static auto get_max_speed_idx = *( int* ) ( Memory::Scan( XorStr( "client.dll" ), XorStr( "8B 80 ?? ?? ?? ?? FF D0 8B 47 08" ) ) + 2 ) / 4;
 
-#if 0
    auto maxSpeed = 250.0f;
-   auto weapon = ( C_WeaponCSBaseGun* ) player->m_hActiveWeapon( ).Get( );
+   auto weapon = ( C_WeaponCSBaseGun* )player->m_hActiveWeapon( ).Get( );
    if ( weapon ) {
-	  auto weaponData = weapon->GetCSWeaponData( );
-	  maxSpeed = weapon->m_weaponMode( ) == 0 ? weaponData->m_flMaxSpeed : weaponData->m_flMaxSpeed2;
+	   auto weaponData = weapon->GetCSWeaponData( );
+	   maxSpeed = weapon->m_weaponMode( ) == 0 ? weaponData->m_flMaxSpeed : weaponData->m_flMaxSpeed2;
 
-	  maxSpeed = ImLerp( maxSpeed * 0.34f, maxSpeed, 1.0f - player->m_flDuckAmount( ) );
+	   maxSpeed = ImLerp( maxSpeed * 0.34f, maxSpeed, 1.0f - player->m_flDuckAmount( ) );
    }
-#else
-   //get_max_speed_idx
-   float maxSpeed = Memory::VCall< float( __thiscall* )( void* ) >( player, 274 )( player );
-#endif
 
    this->flMaxSpeed = std::fminf( maxSpeed, sv_maxspeed->GetFloat( ) );
 }

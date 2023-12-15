@@ -8,19 +8,6 @@ void __fastcall Hooked::hkEmitSound( IEngineSound* thisptr, uint32_t, void* filt
    g_Vars.globals.szLastHookCalled = XorStr( "7" );
 
    auto& prediction = Engine::Prediction::Instance( );
-
-   if ( g_Vars.misc.auto_accept ) {
-	  auto SetLocalPlayerReady = [&] ( ) -> void {
-		 // xref deferred ( if ( sub_108E78E0(str, "deferred") ) )
-		 static auto SetLocalPlayerReadyFn = reinterpret_cast< bool( __stdcall* )( const char* ) >( Memory::Scan( XorStr( "client.dll" ), XorStr( "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12" ) ) );
-		 if ( SetLocalPlayerReadyFn )
-			SetLocalPlayerReadyFn( XorStr( "deferred" ) );
-	  };
-
-	  if ( strstr( sample, XorStr( "UIPanorama.popup_accept_match_beep" ) ) )
-		 SetLocalPlayerReady( );
-   }
-
    if ( prediction.InPrediction( ) ) {
 	  flags |= 1 << 2;
 	  goto end;

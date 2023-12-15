@@ -23,7 +23,7 @@ namespace Hooked
 		  return;
 	 }
 
-	 IPreserveKillfeed::Get( )->OnPaintTraverse( );
+	// IPreserveKillfeed::Get( )->OnPaintTraverse( );
 
 	 oPaintTraverse( ecx, vguiPanel, forceRepaint, allowForce );
 

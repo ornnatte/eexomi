@@ -10,10 +10,10 @@ namespace Index
   {
 	 enum
 	 {
-		GetSpread = 452,
-		GetCSWeaponData = 460,
-		GetInnacuracy = 482,
-		UpdateAccuracyPenalty = 483,
+		 GetSpread = 439,
+		 GetCSWeaponData = 446,
+		 GetInnacuracy = 469,
+		 UpdateAccuracyPenalty = 471,
 	 };
   }
 }

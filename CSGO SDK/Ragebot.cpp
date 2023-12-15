@@ -2504,74 +2504,7 @@ namespace Source
 	  static bool prev_right_side = false;
 	  static bool prev_left_side = false;
 
-	  static auto CalculatePlaybackRate = [] ( C_CSPlayer* player, const float& velocity_delta, float move_dist = -1.0f ) {
-		 auto state = player->m_PlayerAnimState( );
-		 if ( !state )
-			return 0.f;
-
-		 auto anim_layer = player->m_AnimOverlay( ).Base( )[ 6 ];
-
-		 auto move_yaw = player->m_flPoseParameter( )[ state->move_yaw.index ];
-		 if ( !state->move_yaw.valid )
-			return 0.f;
-
-		 state->move_yaw.SetValue( player, velocity_delta );
-
-		 auto studio_hdr = player->m_pStudioHdr( );
-
-		 if ( !studio_hdr )
-			return 0.f;
-
-		 auto seq_dur = player->SequenceDuration( player->m_pStudioHdr( ), anim_layer.m_nSequence );
-
-		 float v56;
-		 if ( seq_dur <= 0.0f )
-			v56 = 10.0f;
-		 else
-			v56 = 1.0f / seq_dur;
-
-		 float v237 = 1.0f / ( 1.0f / v56 );
-
-		 auto dist = move_dist;
-		 if ( move_dist == -1.0f ) {
-			dist = player->GetSequenceMoveDist( player->m_pStudioHdr( ), anim_layer.m_nSequence );
-		 }
-
-		 if ( dist * v237 <= 0.001f ) {
-			dist = 0.001f;
-		 } else {
-			dist *= v237;
-		 }
-
-		 player->m_flPoseParameter( )[ state->move_yaw.index ] = move_yaw;
-
-		 float speed = state->m_velocity;
-
-		 float v50 = ( 1.0f - ( state->m_flGroundFraction * 0.14999998f ) ) * ( ( speed / dist ) * v56 );
-		 float new_playback_rate = Source::m_pGlobalVars->interval_per_tick * v50;
-		 return new_playback_rate;
-	  };
-
-	  int move_side = INT_MAX;
-	  float desync = animState->GetDesyncDelta( );
-	  float left_torso = Math::AngleNormalize( animState->m_flCurrentTorsoYaw - desync );
-	  float right_torso = Math::AngleNormalize( animState->m_flCurrentTorsoYaw + desync );
-	  int method = 0;
-	  if ( player->m_fFlags( ) & FL_ONGROUND && player->m_vecVelocity( ).Length2D( ) >= 25.2f ) {
-		 float left_rate = CalculatePlaybackRate( player, left_torso );
-		 float right_rate = CalculatePlaybackRate( player, right_torso );
-
-		 if ( left_rate != right_rate ) {
-			float rate = lagData->m_flRate / Source::m_pGlobalVars->interval_per_tick;
-			float left_delta = std::fabsf( rate - left_rate );
-			float right_delta = std::fabsf( rate - right_rate );
-			if ( left_delta != right_delta ) {
-			   method = 1;
-			   move_side = left_delta < right_delta;
-			}
-		 }
-	  }
-
+	 
 	  if ( record->m_bIsNoDesyncAnimation ) {
 		 g_Vars.globals.m_iResolverType[ player->entindex( ) ] = 15;
 		 g_BruteforceData[ player->m_entIndex ].LastResolverAttempt = Source::m_pGlobalVars->tickcount;
@@ -2582,17 +2515,6 @@ namespace Source
 		 g_BruteforceData[ player->m_entIndex ].LastResolverAttempt = Source::m_pGlobalVars->tickcount;
 		 g_BruteforceData[ player->m_entIndex ].LastResolverSide = ( record->m_iResolverSide == -1 ) + 1;
 		 g_BruteforceData[ player->m_entIndex ].LastAnimationResolverSide = g_BruteforceData[ player->m_entIndex ].LastResolverSide;
-	  } else if ( move_side != INT_MAX ) {
-		 g_BruteforceData[ player->m_entIndex ].LastResolverAttempt = Source::m_pGlobalVars->tickcount;
-		 if ( move_side ) {
-			g_BruteforceData[ player->m_entIndex ].LastResolverSide = 2;
-		 } else {
-			g_BruteforceData[ player->m_entIndex ].LastResolverSide = 1;
-		 }
-
-		 g_BruteforceData[ player->m_entIndex ].LastAnimationResolverSide = g_BruteforceData[ player->m_entIndex ].LastResolverSide;
-		 g_Vars.globals.m_iResolverType[ player->entindex( ) ] = 13;
-
 	  } else {
 		 float left_damage = 0.f, right_damage = 0.f;
 		 record->Apply( player, -1 );

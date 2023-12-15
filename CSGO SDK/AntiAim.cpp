@@ -445,9 +445,9 @@ namespace Source
 
 	  cmd->viewangles.Normalize( );
 
-	  if ( settings->desync ) {
-		 DesyncAnimation( cmd, bSendPacket, settings );
-	  }
+	 //if ( settings->desync ) {
+	//DesyncAnimation( cmd, bSendPacket, settings );
+	 //}
 
    #if 0
 	  if ( g_Vars.globals.TickbaseShift > 0 || ( *bSendPacket && g_Vars.antiaim.shift && ( settings->shift_pitch || settings->shift_yaw ) ) ) {

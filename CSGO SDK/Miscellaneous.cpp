@@ -222,7 +222,7 @@ namespace Source
    void C_Miscellaneous::SkyboxCahanger( ) {
 	  static uintptr_t adr = 0;
 	  if ( !adr )
-		 adr = Memory::Scan( ( std::uintptr_t )GetModuleHandleA( XorStr( "engine.dll" ) ), XorStr( "55 8B EC 81 EC ?? ?? ?? ?? 56 57 8B F9 C7 45" ) );
+		  adr = Memory::Scan( ( std::uintptr_t )GetModuleHandleA( XorStr( "engine.dll" ) ), XorStr( "55 8B EC 81 EC ? ? ? ? 56 57 8B F9 C7 45" ) );
 	  static auto fnLoadNamedSkys = ( void( __fastcall* )( const char* ) )adr;
 	  static ConVar* default_skyname = Source::m_pCvar->FindVar( XorStr( "sv_skyname" ) );
 	  if ( default_skyname ) {

@@ -190,8 +190,10 @@ namespace Hooked
 		 }
 	  #endif
 
-		 if ( stage == FRAME_START && Source::m_pEngine->IsConnected( ) )
-			IPreserveKillfeed::Get( )->OnFrameStart( );
+		 if ( stage == FRAME_START && Source::m_pEngine->IsConnected( ) ) {
+
+		 }
+			//IPreserveKillfeed::Get( )->OnFrameStart( );
 
 		 if ( stage == FRAME_RENDER_START && Source::m_pEngine->IsConnected( ) ) {
 			static bool has_reset_interp = false;

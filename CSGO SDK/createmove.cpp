@@ -138,8 +138,8 @@ namespace Hooked
 
 	  movement->PrePrediction( cmd, pLocal, bSendPacket, nullptr );
 
-	  static auto buttons_state = Memory::FindInDataMap( pLocal->GetPredDescMap( ), XorStr( "m_nButtons" ) );
-	  int prev_buttons = *reinterpret_cast< int* >( uint32_t( pLocal ) + buttons_state );
+	 // static auto buttons_state = Memory::FindInDataMap( pLocal->GetPredDescMap( ), XorStr( "m_nButtons" ) );
+	 // int prev_buttons = *reinterpret_cast< int* >( uint32_t( pLocal ) + buttons_state );
 
 	  prediction.Begin( cmd, bSendPacket );
 	  {
@@ -226,7 +226,7 @@ namespace Hooked
 			  && weaponInfo->m_iWeaponType >= WEAPONTYPE_KNIFE
 			  && weaponInfo->m_iWeaponType <= WEAPONTYPE_MACHINEGUN
 			  && pLocal->CanShoot( )
-			  && ( weaponInfo->m_ucFullAuto || ( prev_buttons & IN_ATTACK ) == 0 ) ) {
+			  && ( weaponInfo->m_ucFullAuto /*|| ( prev_buttons & IN_ATTACK ) == 0 )*/ ) ) {
 			lockedAngles = cmd->viewangles;
 			LastShotTime = Source::m_pGlobalVars->tickcount;
 
@@ -330,7 +330,7 @@ namespace Hooked
 	  if ( !_cmd->command_number )
 		 return oCreateMove( ft, _cmd );
 
-	  PreserveKillfeed( );
+	  // PreserveKillfeed( );
 
 	  Encrypted_t<uintptr_t> memes( ( uintptr_t* ) _AddressOfReturnAddress( ) );
 	  bool* bSendPacket = reinterpret_cast< bool* >( uintptr_t( memes.Xor( ) ) + 0x14 );

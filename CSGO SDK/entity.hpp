@@ -56,14 +56,14 @@ namespace Index
    namespace C_BaseEntity
    {
 	  enum {
-		 IsPlayer = 157,
-		 IsWeapon = 165,
+		 IsPlayer = 152,
+		 IsWeapon = 160,
 	  };
    }
    namespace C_BaseAnimating
    {
 	  enum {
-		 UpdateClientSideAnimation = 223,
+		 UpdateClientSideAnimation = 218,
 	  };
    }
 }

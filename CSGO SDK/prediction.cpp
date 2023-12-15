@@ -55,29 +55,19 @@ namespace Engine
 
 	  Source::m_pGameMovement->StartTrackPredictionErrors( predictionData->m_pPlayer );
 
-	  static auto m_nImpulse = Memory::FindInDataMap( predictionData->m_pPlayer->GetPredDescMap( ), XorStr( "m_nImpulse" ) );
-	  static auto m_nButtons = Memory::FindInDataMap( predictionData->m_pPlayer->GetPredDescMap( ), XorStr( "m_nButtons" ) );
-	  static auto m_afButtonLast = Memory::FindInDataMap( predictionData->m_pPlayer->GetPredDescMap( ), XorStr( "m_afButtonLast" ) );
-	  static auto m_afButtonPressed = Memory::FindInDataMap( predictionData->m_pPlayer->GetPredDescMap( ), XorStr( "m_afButtonPressed" ) );
-	  static auto m_afButtonReleased = Memory::FindInDataMap( predictionData->m_pPlayer->GetPredDescMap( ), XorStr( "m_afButtonReleased" ) );
+	  //	CBasePlayer::UpdateButtonState
+	  {
+		  predictionData->m_pCmd->buttons |= *reinterpret_cast< uint32_t* >( uint32_t( predictionData->m_pPlayer ) + 0x3310 );
 
-	  // not in datamap :(
-	  static auto m_afButtonForced = m_nButtons + 0x138; // 0x3330
+		  const int v16 = predictionData->m_pCmd->buttons;
+		  int* unk02 = reinterpret_cast< int* >( uint32_t( predictionData->m_pPlayer ) + 0x31E8 );
+		  const int v17 = v16 ^ *unk02;
 
-	  predictionData->m_pCmd->buttons |= *reinterpret_cast< uint32_t* >( uint32_t( predictionData->m_pPlayer ) + m_afButtonForced );
-
-	  if ( predictionData->m_pCmd->impulse )
-		 *reinterpret_cast< uint32_t* >( uint32_t( predictionData->m_pPlayer ) + m_nImpulse ) = predictionData->m_pCmd->impulse;
-
-	  // CBasePlayer::UpdateButtonState
-	  int* buttons = reinterpret_cast< int* >( uint32_t( predictionData->m_pPlayer ) + m_nButtons );
-	  const int buttonsChanged = predictionData->m_pCmd->buttons ^ *buttons;
-
-	  // Track button info so we can detect 'pressed' and 'released' buttons next frame
-	  *reinterpret_cast< int* >( uint32_t( predictionData->m_pPlayer ) + m_afButtonLast ) = *buttons;
-	  *reinterpret_cast< int* >( uint32_t( predictionData->m_pPlayer ) + m_nButtons ) = predictionData->m_pCmd->buttons;
-	  *reinterpret_cast< int* >( uint32_t( predictionData->m_pPlayer ) + m_afButtonPressed ) = buttonsChanged & predictionData->m_pCmd->buttons;  // The changed ones still down are "pressed"
-	  *reinterpret_cast< int* >( uint32_t( predictionData->m_pPlayer ) + m_afButtonReleased ) = buttonsChanged & ~predictionData->m_pCmd->buttons; // The ones not down are "released"
+		  *reinterpret_cast< int* >( uint32_t( predictionData->m_pPlayer ) + 0x31DC ) = *unk02;
+		  *reinterpret_cast< int* >( uint32_t( predictionData->m_pPlayer ) + 0x31E8 ) = v16;
+		  *reinterpret_cast< int* >( uint32_t( predictionData->m_pPlayer ) + 0x31E0 ) = v16 & v17;
+		  *reinterpret_cast< int* >( uint32_t( predictionData->m_pPlayer ) + 0x31E4 ) = v17 & ~v16;
+	  }
 
 	  // Call standard client pre-think
 	  predictionData->m_pPlayer->PreThink( );
@@ -345,30 +335,38 @@ namespace Engine
    }
 
    void Prediction::PostEntityThink( C_CSPlayer* player ) {
-	  static auto PostThinkVPhysics = ( bool( __thiscall* )( C_CSPlayer* ) )Engine::Displacement.Function.m_uPostThinkVPhysics;
-	  static auto SimulatePlayerSimulatedEntities = ( void( __thiscall* )( C_CSPlayer* ) )Engine::Displacement.Function.m_SimulatePlayerSimulatedEntities;
-	  static auto MemeIndex = *( int* ) ( Memory::Scan( XorStr( "client.dll" ), XorStr( "FF 90 ?? ?? ?? ?? 83 3D ?? ?? ?? ?? ?? 7E 1C" ) ) + 2 ) / 4;
-	  static auto MemeIndex2 = *( int* ) ( Memory::Scan( XorStr( "client.dll" ), XorStr( "FF 90 ?? ?? ?? ?? 8B 07 8B CF FF 90 ?? ?? ?? ?? 8B CF" ) ) + 2 ) / 4;
-	  static auto MemeOffset = *( int* ) ( Memory::Scan( XorStr( "client.dll" ), XorStr( "C7 87 ?? ?? ?? ?? ?? ?? ?? ?? 83 BF ?? ?? ?? ?? ?? 75 0C" ) ) + 2 );
-	  static auto MemeOffset2 = *( int* ) ( Memory::Scan( XorStr( "client.dll" ), XorStr( "C7 87 ?? ?? ?? ?? ?? ?? ?? ?? 83 BF ?? ?? ?? ?? ?? 75 0C" ) ) + 2 );
+	   static auto PostThinkVPhysics = ( bool( __thiscall* )( C_CSPlayer* ) )Engine::Displacement.Function.m_uPostThinkVPhysics;
+	   static auto SimulatePlayerSimulatedEntities = ( void( __thiscall* )( C_CSPlayer* ) )Engine::Displacement.Function.m_SimulatePlayerSimulatedEntities;
 
-	  if ( player && !player->IsDead( ) ) {
-		 using Fn = void( __thiscall* )( void* );
-		 Memory::VCall<Fn>( player, MemeIndex )( player );
+	   if ( player && !player->IsDead( ) ) {
+		   // xref: UpdateCollisionBoundsFn
+		   //  using Fn = void( __thiscall* )( void* );
+		   //  Memory::VCall<Fn>( player, MemeIndex )( player );
 
-		 if ( player->m_fFlags( ) & FL_ONGROUND )
-			*reinterpret_cast< uintptr_t* >( uintptr_t( player ) + MemeOffset ) = 0;
+		   using UpdateCollisionBoundsFn = void( __thiscall* )( void* );
+		   Memory::VCall<UpdateCollisionBoundsFn>( player, 329 )( player );
 
-		 if ( *reinterpret_cast< int* >( uintptr_t( player ) + MemeOffset2 ) == -1 ) {
-			using Fn1 = void( __thiscall* )( void*, int );
-			Memory::VCall<Fn1>( player, MemeIndex2 )( player, NULL );
-		 }
 
-		 Memory::VCall<Fn>( player, MemeIndex2 + 1 )( player );
+		   if ( player->m_fFlags( ) & FL_ONGROUND )
+			   *reinterpret_cast< uintptr_t* >( uintptr_t( player ) + 0x3004 ) = 0;
 
-		 PostThinkVPhysics( player );
-	  }
-	  SimulatePlayerSimulatedEntities( player );
+		   if ( *reinterpret_cast< int* >( uintptr_t( player ) + 0x28AC ) == -1 ) {
+			   // xref: SetSequenceFn
+			   // using Fn1 = void( __thiscall* )( void*, int );
+			   // Memory::VCall<Fn1>( player, MemeIndex2 )( player, NULL );
+
+			   using SetSequenceFn = void( __thiscall* )( void*, int );
+			   Memory::VCall<SetSequenceFn>( player, 213 )( player, 0 );
+		   }
+
+		   // xref: StudioFrameAdvanceFn
+		   // Memory::VCall<Fn>( player, MemeIndex2 + 1 )( player );
+		   using StudioFrameAdvanceFn = void( __thiscall* )( void* );
+		   Memory::VCall<StudioFrameAdvanceFn>( player, 214 )( player );
+
+		   PostThinkVPhysics( player );
+	   }
+	   SimulatePlayerSimulatedEntities( player );
    }
 
    bool Prediction::ShouldSimulate( int command_number ) {
