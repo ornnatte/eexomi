@@ -3551,8 +3551,13 @@ void CMenuV2::MenuRender( IDirect3DDevice9* pDevice ) {
 				  skin->m_enabled = true;
 
 				  ImGui::SliderFloatA( XorStr( "Quality" ), &skin->m_wear, 0.00000001f, 1.00f, XorStr( "%.8f %%" ) );
-				  ImGui::SliderIntA( XorStr( "Seed" ), &skin->m_seed, 1, 1000, XorStr( "%d" ) );
-				  ImGui::SliderIntA( XorStr( "Stat-trak" ), &skin->m_stat_trak, 1, 1000000, XorStr( "%d" ) );
+				  //ImGui::SliderIntA( XorStr( "Seed" ), &skin->m_seed, 1, 1000, XorStr( "%d" ) );
+				  //ImGui::SliderIntA( XorStr( "Stat-trak" ), &skin->m_stat_trak, 1, 1000000, XorStr( "%d" ) );
+
+				  if ( ImGui::Button( "Force update", ImVec2( -1.f, 22.f ) ) ) {
+					  g_Vars.m_global_skin_changer.m_update_skins = true;
+					  g_Vars.m_global_skin_changer.m_update_gloves = true;
+				  }
 				  static char buffer[ 128 ] = { ( '\0' ) };
 
 				  //ImGui::InputText( XorStr( "Name" ), buffer, 128 );
