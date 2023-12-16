@@ -8,34 +8,6 @@
 bool run_once = false;
 uint64_t Cookie = 0;
 
-void SetCookie( ) {
-   auto cs = ( uintptr_t ) Source::m_pClientState.Xor( );
-   Cookie = *( uint64_t* ) ( cs + 0x3B8 + 0x8 );
-}
-
-void Reconnect( ) {
-   auto cs = ( uintptr_t ) Source::m_pClientState.Xor( );
-   *( uint64_t* ) ( cs + 0x3B8 + 0x8 ) = Cookie;
-
-   static auto client = GetModuleHandle( "client.dll" );
-   auto& BanFlag = *( DWORD* ) ( ( DWORD ) client + ( DWORD ) 0x514ED1C );
-   auto& xzchoeto = *( bool* ) ( ( DWORD ) client + ( DWORD ) 0x5150276 );//5257B68
-   auto& setupinabandon = *( DWORD* ) ( ( DWORD ) client + ( DWORD ) 0x525E150 );
-
-   DWORD tempBan = BanFlag |= 1;
-   BanFlag = ( tempBan << 1 );
-   xzchoeto = 1;
-   if ( setupinabandon & 1 )
-	  setupinabandon |= 0u;
-
-   static auto ActionReconnectToOngoingMatchAddress = Memory::Scan( ( uintptr_t ) client, "A1 ?? ?? ?? ?? D1 E8 A8 01 74 4D" );
-
-   typedef unsigned int( __stdcall * ActionReconnectToOngoingMatchFn )( uintptr_t, uintptr_t );
-   ActionReconnectToOngoingMatchFn ActionReconnectToOngoingMatch = ( ActionReconnectToOngoingMatchFn ) ActionReconnectToOngoingMatchAddress;
-
-   ActionReconnectToOngoingMatch( 0, 0 );
-}
-
 HRESULT __stdcall Hooked::EndScene( IDirect3DDevice9* pDevice ) {
    if ( !pDevice )
       goto end;
@@ -103,15 +75,6 @@ HRESULT __stdcall Hooked::EndScene( IDirect3DDevice9* pDevice ) {
 
    for ( auto i = 0; i < size; i++ )
 	  pDevice->SetRenderState( backup_states[ i ], old_states[ i ] );
-
-//   // working btw
-//#if 0
-//   if ( Cookie == 0 )
-//	  SetCookie( );
-//
-//   if ( InputSys::Get( )->WasKeyPressed( VirtualKeys::End ) )
-//	  Reconnect( );
-//#endif
 
 end:
    return oEndScene( pDevice );
